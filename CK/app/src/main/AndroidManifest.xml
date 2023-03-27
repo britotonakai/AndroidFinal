@@ -12,6 +12,15 @@
         android:theme="@style/Theme.HomeScreen"
         tools:targetApi="31">
         <activity
+            android:name=".SelectFolderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Example1Acticity"
+            android:exported="false" />
+        <activity
+            android:name=".AllNotes"
+            android:exported="false" />
+        <activity
             android:name=".TrashScreen"
             android:exported="false" />
         <activity
