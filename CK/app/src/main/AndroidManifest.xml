@@ -7,30 +7,34 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Notezilla"
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeScreen"
         tools:targetApi="31">
         <activity
-            android:name=".SelectFolderActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Example1Acticity"
-            android:exported="false" />
-        <activity
-            android:name=".AllNotes"
-            android:exported="false" />
-        <activity
-            android:name=".TrashScreen"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".BottomNavigation"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".TrashScreen"
+            android:exported="false" />
+        <activity
+            android:name=".AllNotesScreen"
+            android:exported="false" />
+        <activity
+            android:name=".SelectFolderScreen"
+            android:exported="false" />
+        <activity
+            android:name=".NoteScreen"
+            android:exported="false" />
+        <activity
+            android:name=".HomeScreen"
+            android:exported="false">
         </activity>
     </application>
 

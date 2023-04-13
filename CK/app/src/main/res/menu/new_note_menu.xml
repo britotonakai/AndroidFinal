@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:icon="@drawable/baseline_edit_24"
+        android:title="Pen"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/baseline_table_rows_24"
+        android:title="table"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/baseline_image_24"
+        android:title="Pics"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/baseline_format_list_bulleted_24"
+        android:title="list"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/twotone_text_fields_24"
+        android:title="Text"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/baseline_list_alt_24"
+        android:title="bullet"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/baseline_ios_share_24"
+        android:title="share"
+        app:showAsAction="always" />
+</menu>
