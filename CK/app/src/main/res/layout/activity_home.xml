@@ -114,6 +114,16 @@
         app:layout_constraintStart_toEndOf="@+id/textViewFolder"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/noteList"
+        android:layout_width="409dp"
+        android:layout_height="519dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFolder" />
+
 
     <!--    <androidx.appcompat.widget.Toolbar-->
 <!--        android:id="@+id/toolbarTask"-->

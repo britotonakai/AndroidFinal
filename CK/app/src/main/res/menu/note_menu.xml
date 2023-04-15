@@ -9,8 +9,8 @@
         app:showAsAction="always" />
     <item
         android:icon="@drawable/baseline_list_alt_24"
-        android:id="@+id/allNotesScreen"
-        android:title="ListNote"
+        android:id="@+id/allFolderScreen"
+        android:title="ListFolder"
         app:showAsAction="always" />
     <item
         android:icon="@drawable/baseline_edit_24"
@@ -21,9 +21,5 @@
         android:icon="@drawable/baseline_delete_24"
         android:id="@+id/trashScreen"
         android:title="Trash"
-        app:showAsAction="always" />
-    <item
-        android:icon="@drawable/baseline_settings_24"
-        android:title="Setting"
         app:showAsAction="always" />
 </menu>

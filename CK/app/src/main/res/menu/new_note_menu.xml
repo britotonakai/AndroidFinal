@@ -4,11 +4,11 @@
     >
 
     <item
-        android:icon="@drawable/baseline_edit_24"
+        android:icon="@drawable/baseline_create_24"
         android:title="Pen"
         app:showAsAction="always" />
     <item
-        android:icon="@drawable/baseline_table_rows_24"
+        android:icon="@drawable/baseline_list_alt_24"
         android:title="table"
         app:showAsAction="always" />
     <item
@@ -24,7 +24,7 @@
         android:title="Text"
         app:showAsAction="always" />
     <item
-        android:icon="@drawable/baseline_list_alt_24"
+        android:icon="@drawable/baseline_checklist_24"
         android:title="bullet"
         app:showAsAction="always" />
     <item

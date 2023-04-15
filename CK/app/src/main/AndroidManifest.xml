@@ -12,7 +12,7 @@
         android:theme="@style/Theme.HomeScreen"
         tools:targetApi="31">
         <activity
-            android:name=".BottomNavigation"
+            android:name=".MainScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
             android:name=".AllNotesScreen"
             android:exported="false" />
         <activity
-            android:name=".SelectFolderScreen"
+            android:name=".AllFolderScreen"
             android:exported="false" />
         <activity
             android:name=".NoteScreen"
