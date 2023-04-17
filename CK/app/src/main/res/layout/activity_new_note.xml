@@ -1,130 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color">
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton2"-->
-<!--        android:layout_width="40dp"-->
-<!--        android:layout_height="43dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.01"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.005"-->
-<!--        app:srcCompat="@drawable/baseline_arrow_back_ios_24" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/textView2"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Back"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="20dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.098"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton3"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.341"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/baseline_edit_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton6"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.653"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/baseline_format_list_bulleted_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton4"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.449"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/baseline_table_rows_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton8"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.863"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/baseline_playlist_add_check_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton7"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.759"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/twotone_text_fields_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton5"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.55"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/baseline_image_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/imageButton10"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:backgroundTint="@color/light_white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.958"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.015"-->
-<!--        app:srcCompat="@drawable/baseline_ios_share_24" />-->
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-83dp"
+        tools:layout_editor_absoluteY="155dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
@@ -148,7 +35,7 @@
             app:iconTint="#FFFFFF"
             app:rippleColor="#000000" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnPen"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -157,9 +44,11 @@
             android:layout_marginEnd="6dp"
             android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/btnTable"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Pen Tool"
             app:srcCompat="@drawable/baseline_create_24" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnTable"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -168,61 +57,75 @@
             android:layout_marginEnd="6dp"
             android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/btnImage"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Table Tool"
             app:srcCompat="@drawable/baseline_list_alt_24" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnImage"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/toolbar2"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/btnBulletList"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Image Tool"
             app:srcCompat="@drawable/baseline_image_24" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnBulletList"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/toolbar2"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/btnText"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Bullet Tool"
             app:srcCompat="@drawable/baseline_format_list_bulleted_24" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnText"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/toolbar2"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/btnCheckList"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Edit Text Tool"
             app:srcCompat="@drawable/twotone_text_fields_24" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnShare"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/toolbar2"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Share Tool"
             app:srcCompat="@drawable/baseline_ios_share_24" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnCheckList"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignBottom="@+id/toolbar2"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/btnShare"
+            android:adjustViewBounds="false"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="Checklist Tool"
             app:srcCompat="@drawable/baseline_checklist_24" />
 
     </RelativeLayout>
@@ -239,6 +142,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.075" />
 
+    <EditText
+        android:id="@+id/editTextNote"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:ems="10"
+        android:gravity="top"
+        android:layout_margin="20dp"
+        android:inputType="textPersonName"
+        android:hint="Enter your text here"
+        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentDay" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
