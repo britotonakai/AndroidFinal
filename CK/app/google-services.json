@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "677399959414",
+    "project_id": "notezilla-cd5a8",
+    "storage_bucket": "notezilla-cd5a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677399959414:android:d961b04e452fe01f50cc57",
+        "android_client_info": {
+          "package_name": "com.example.homescreen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677399959414-kuni9ru8551jkm3m636nidpgtngiiake.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.homescreen",
+            "certificate_hash": "cf7540ff43171d3ad66b0e8387048ecee30a9f86"
+          }
+        },
+        {
+          "client_id": "677399959414-4it044nqvjhbltf3vta8d82d3mrkak0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBde0uPG5d6S4as4hG4CBVjHarbTG8SWmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677399959414-4it044nqvjhbltf3vta8d82d3mrkak0e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
