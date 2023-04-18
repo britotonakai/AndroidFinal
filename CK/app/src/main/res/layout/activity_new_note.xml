@@ -22,15 +22,15 @@
             android:theme="?attr/actionBarTheme" />
 
         <Button
-            android:id="@+id/btnBack"
+            android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/toolbar2"
             android:layout_marginBottom="8dp"
             android:background="#00FFFFFF"
             android:backgroundTint="#FFFFFF"
-            android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
-            android:text="Back"
+            android:drawableLeft="@drawable/baseline_save_24"
+            android:text="Save"
             android:textColor="@color/black"
             app:iconTint="#FFFFFF"
             app:rippleColor="#000000" />
@@ -135,7 +135,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="18:00 PM, 19 March, 2023"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -143,19 +143,35 @@
         app:layout_constraintVertical_bias="0.075" />
 
     <EditText
-        android:id="@+id/editTextNote"
+        android:id="@+id/editTextNoteTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:layout_margin="20dp"
+        android:hint="Enter your title"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@null"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentDay" />
+
+    <EditText
+        android:id="@+id/editTextNoteContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@null"
         android:ems="10"
-        android:gravity="top"
-        android:layout_margin="20dp"
         android:inputType="textPersonName"
-        android:hint="Enter your text here"
+        android:hint="Enter your text"
+        android:gravity="top"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentDay" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNoteTitle" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

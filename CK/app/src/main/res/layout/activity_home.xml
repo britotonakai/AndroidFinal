@@ -116,83 +116,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/noteList"
-        android:layout_width="409dp"
-        android:layout_height="519dp"
-        android:layout_marginTop="1dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewFolder" />
-
-
-    <!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:id="@+id/toolbarTask"-->
-<!--        android:layout_width="433dp"-->
-<!--        android:layout_height="66dp"-->
-<!--        android:background="#8E9775"-->
-<!--        android:minHeight="?attr/actionBarSize"-->
-<!--        android:theme="?attr/actionBarTheme"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnHome"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:backgroundTint="#00FFFFFF"-->
-<!--        android:contentDescription="Home"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/toolbarTask"-->
-<!--        app:srcCompat="@drawable/baseline_home_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnNote"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:backgroundTint="#00FFFFFF"-->
-<!--        android:contentDescription="Note"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/btnHome"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/toolbarTask"-->
-<!--        app:srcCompat="@drawable/baseline_edit_note_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnSetting"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:backgroundTint="#00FFFFFF"-->
-<!--        android:contentDescription="Setting"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/toolbarTask"-->
-<!--        app:srcCompat="@drawable/baseline_settings_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnDelete"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:backgroundTint="#00FFFFFF"-->
-<!--        android:contentDescription="Delete"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/toolbarTask"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/btnSetting"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/toolbarTask"-->
-<!--        app:srcCompat="@drawable/baseline_delete_24" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnCreate"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:backgroundTint="#00FFFFFF"-->
-<!--        android:contentDescription="Create"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/btnDelete"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/btnNote"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/toolbarTask"-->
-<!--        app:srcCompat="@drawable/baseline_create_24" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
