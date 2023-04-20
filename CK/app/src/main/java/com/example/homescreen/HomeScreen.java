@@ -48,10 +48,11 @@ public class HomeScreen extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    String noteID = String.valueOf(snapshot1.child("noteID").getValue());
                     String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
                     String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
                     String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
-                    list.add(new Note(noteTitle, noteContent, noteDateTime));
+                    list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
                 }
             }
 

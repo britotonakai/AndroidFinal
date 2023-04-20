@@ -1,12 +1,21 @@
 package com.example.homescreen;
 
 public class Note {
-    String noteTitle, noteContent, noteDateTime;
+    String noteID,noteTitle, noteContent, noteDateTime;
 
-    public Note(String noteTitle, String noteContent,String noteDateTime){
+    public Note(String noteID,String noteTitle, String noteContent,String noteDateTime){
+        this.noteID = noteID;
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
         this.noteDateTime = noteDateTime;
+    }
+
+    public String getNoteID() {
+        return noteID;
+    }
+
+    public void setNoteID(String noteID) {
+        this.noteID = noteID;
     }
 
     public String getNoteContent() {
