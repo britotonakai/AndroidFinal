@@ -5,6 +5,8 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +42,7 @@ public class NoteScreen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_new_note, container, false);
         btnSave = view.findViewById(R.id.btnSave);
-        btnShare = (ImageButton) view.findViewById(R.id.btnShare);
+        btnShare = view.findViewById(R.id.btnShare);
         editTextNoteTitle = view.findViewById(R.id.editTextNoteTitle);
         editTextNoteContent = view.findViewById(R.id.editTextNoteContent);
         textViewCurrentDay = view.findViewById(R.id.textViewCurrentDay);
