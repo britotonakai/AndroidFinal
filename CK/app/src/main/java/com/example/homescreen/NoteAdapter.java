@@ -1,6 +1,8 @@
 package com.example.homescreen;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,6 +67,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int position = holder.getAdapterPosition();
+                        String noteID = listNote.get(position).getNoteID();
+
+                        Intent sendPosition = new Intent();
+                        sendPosition.setAction("Send ID");
+                        sendPosition.putExtra("ID", noteID);
+                        view.getContext().sendBroadcast(sendPosition);
+
                         if (mListener != null) {
                             mListener.onPopupMenuItemClick(item);
                         }

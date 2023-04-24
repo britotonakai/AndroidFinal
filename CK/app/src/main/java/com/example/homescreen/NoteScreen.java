@@ -5,8 +5,6 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +45,8 @@ public class NoteScreen extends Fragment {
         editTextNoteContent = view.findViewById(R.id.editTextNoteContent);
         textViewCurrentDay = view.findViewById(R.id.textViewCurrentDay);
         mainScreen = (MainScreen)getActivity();
+
+
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
