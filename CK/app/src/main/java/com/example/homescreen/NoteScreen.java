@@ -46,8 +46,6 @@ public class NoteScreen extends Fragment {
         textViewCurrentDay = view.findViewById(R.id.textViewCurrentDay);
         mainScreen = (MainScreen)getActivity();
 
-
-
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
         String dateTime = day_month_year_time.format(calendar.getTime());

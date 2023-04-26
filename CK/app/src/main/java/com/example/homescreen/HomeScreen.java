@@ -1,7 +1,13 @@
 package com.example.homescreen;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,9 +21,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,23 +42,24 @@ public class HomeScreen extends Fragment implements NoteAdapter.OnPopupMenuItemC
     RecyclerView noteList;
     NoteAdapter noteAdapter;
     List<Note> list = new ArrayList<>();
-    NoteScreen noteScreen = new NoteScreen();
+    EditNoteScreen editNoteScreen = new EditNoteScreen();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_home, container, false);
         noteList = view.findViewById(R.id.noteList);
-        noteAdapter = new NoteAdapter(this::onPopupMenuItemClick, list);
 
+        noteAdapter = new NoteAdapter(this::onPopupMenuItemClick, list);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         noteList.setLayoutManager(gridLayoutManager);
         noteAdapter.setNoteData(readNote());
         noteList.setAdapter(noteAdapter);
         return view;
-
     }
+
+
     private List<Note> readNote() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Note");
@@ -78,8 +89,6 @@ public class HomeScreen extends Fragment implements NoteAdapter.OnPopupMenuItemC
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
-
     @Override
     public void onPopupMenuItemClick(MenuItem item) {
         DatabaseReference removeNote = FirebaseDatabase.getInstance().getReference();
@@ -87,58 +96,70 @@ public class HomeScreen extends Fragment implements NoteAdapter.OnPopupMenuItemC
 
         switch(item.getItemId()){
             case R.id.btnEdit:
-                AlertDialog.Builder editBuilder = new AlertDialog.Builder(getContext());
-                editBuilder.setTitle("Edit Note");
-                LayoutInflater editLayoutInflater = LayoutInflater.from(getContext());
-                View editNoteView = editLayoutInflater.inflate(R.layout.edit_note, null);
-                editBuilder.setView(editNoteView);
-                EditText editTextTitle = editNoteView.findViewById(R.id.editTitle);
-                EditText editTextContent = editNoteView.findViewById(R.id.editContent);
-                editTextTitle.setText("Note Title");
-                editTextContent.setText("Note Content");
-                editBuilder
-                        .setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+//                AlertDialog.Builder editBuilder = new AlertDialog.Builder(getContext());
+//                editBuilder.setTitle("Edit Note");
+//                LayoutInflater editLayoutInflater = LayoutInflater.from(getContext());
+//                View editNoteView = editLayoutInflater.inflate(R.layout.edit_note, null);
+//                editBuilder.setView(editNoteView);
+//                EditText editTextTitle = editNoteView.findViewById(R.id.editTitle);
+//                EditText editTextContent = editNoteView.findViewById(R.id.editContent);
+//                editTextTitle.setText("Note Title");
+//                editTextContent.setText("Note Content");
+//                editBuilder
+//                        .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                            }
+//                        })
+//                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                            }
+//                        });
+//                AlertDialog editDialog = editBuilder.create();
+//                editDialog.getWindow().setLayout(10,20);
+//                editDialog.show();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.ConstrainLayout, editNoteScreen);
+                fragmentTransaction.commit();
 
-                            }
-                        });
-                AlertDialog editDialog = editBuilder.create();
-                editDialog.getWindow().setLayout(10,20);
-                editDialog.show();
-                //                IntentFilter intentFilter = new IntentFilter();
+//                IntentFilter intentFilter = new IntentFilter();
 //                intentFilter.addAction("Send ID");
-//                DatabaseReference notePosition = editNote.child(noteID);
-//                notePosition.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if(noteID == snapshot.getValue().toString()){
-//                            String noteTitle = snapshot.child("noteTitle").getValue().toString();
-//                            String noteContent = snapshot.child("noteContent").getValue().toString();
-//                            editTextTitle.setText(noteTitle);
-//                            editTextContent.setText(noteContent);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
 //                getContext().registerReceiver(new BroadcastReceiver() {
 //                    @Override
 //                    public void onReceive(Context context, Intent intent) {
-//                        String noteID = intent.getStringExtra("ID");
-//                        Log.d("position_HomeScreen", " " + noteID);
+//                        int position = intent.getIntExtra("ID", 0);
+//                        Log.d("noteID Home Screen", list.get(position).getNoteID());
+//                        DatabaseReference databaseReference = editNote.child(list.get(position).getNoteID());
+//                        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    Log.d("ID Database", " " + databaseReference.getKey());
+//
+//                                    if(list.get(position).getNoteID() == databaseReference.getKey()){
+//
+//                                        fragmentTransaction.replace(R.id.ConstrainLayout, editNoteScreen);
+//                                        editNoteScreen.editTextNoteTitle.setText(list.get(position).getNoteTitle());
+//                                        editNoteScreen.editTextNoteContent.setText(list.get(position).getNoteContent());
+//                                        Log.d("noteTitle", list.get(position).getNoteTitle());
+//                                        Log.d("noteContent", list.get(position).getNoteContent());
+//                                        fragmentTransaction.commit();
+//
+//                                    }
+////                                    DataSnapshot document = task.getResult();
+////                                    Log.d("Quan", document.);
+//                                }
+//                            }
+//                        });
 //                    }
 //                }, intentFilter);
+
+
                 break;
             case R.id.btnDelete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -196,5 +217,9 @@ public class HomeScreen extends Fragment implements NoteAdapter.OnPopupMenuItemC
         }
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
+    }
 }

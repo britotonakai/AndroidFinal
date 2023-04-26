@@ -1,8 +1,6 @@
 package com.example.homescreen;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,24 +61,23 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
                 MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.list_note_button, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int position = holder.getAdapterPosition();
-                        String noteID = listNote.get(position).getNoteID();
-
-                        Intent sendPosition = new Intent();
-                        sendPosition.setAction("Send ID");
-                        sendPosition.putExtra("ID", noteID);
-                        view.getContext().sendBroadcast(sendPosition);
-
-                        if (mListener != null) {
-                            mListener.onPopupMenuItemClick(item);
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        int position = holder.getAdapterPosition();
+//
+//                        Intent sendPosition = new Intent();
+//                        sendPosition.setAction("Send ID");
+//                        sendPosition.putExtra("ID", position);
+//                        view.getContext().sendBroadcast(sendPosition);
+//
+//                        if (mListener != null) {
+//                            mListener.onPopupMenuItemClick(item);
+//                        }
+//                        return true;
+//                    }
+//                });
+//                popupMenu.show();
             }
         });
 

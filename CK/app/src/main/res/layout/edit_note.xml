@@ -1,33 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/editLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:minHeight="500dp"
+    android:minWidth="400dp"
+    android:padding="5dp">
 
-    <TextView
-        android:id="@+id/textCurrentDay"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnEditSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="#00FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:drawableLeft="@drawable/baseline_save_24"
+            android:text="Save"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:id="@+id/spacingLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"></LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnEditPen"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_weight="0"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/baseline_create_24" />
+
+        <ImageButton
+            android:id="@+id/btnEditTable"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/baseline_list_alt_24" />
+
+        <ImageButton
+            android:id="@+id/btnEditImage"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/baseline_image_24" />
+
+        <ImageButton
+            android:id="@+id/btnEditBulletList"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/baseline_format_list_bulleted_24" />
+
+        <ImageButton
+            android:id="@+id/btnEditText"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/twotone_text_fields_24" />
+
+        <ImageButton
+            android:id="@+id/btnEditCheckList"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/baseline_checklist_24" />
+
+        <ImageButton
+            android:id="@+id/btnEditShare"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/baseline_ios_share_24" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewEditCurrentDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="18:00 PM, 19 March, 2023"
+        android:textSize="18sp"
+        android:textAlignment="center"/>
 
     <EditText
         android:id="@+id/editTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@null"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:text="Your current title" />
 
     <EditText
         android:id="@+id/editContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="550dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@null"
         android:ems="10"
-        android:gravity="top"
-        android:inputType="textPersonName"
-        android:text="Name" />
+        android:gravity="start|top"
+        android:inputType="textMultiLine" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="bottom|end">
+
+        <Button
+            android:id="@+id/btnConfirmEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#F9BFB6"
+            android:text="Edit"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#CCD5AE"
+            android:text="Cancel"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
 </LinearLayout>
