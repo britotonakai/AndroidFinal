@@ -154,6 +154,25 @@ public class NoteScreen extends Fragment {
                 return false;
             }
         });
+        //numbering lines
+        editTextNoteContent.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    String[] lines = editTextNoteContent.getText().toString().split("\n");
+                    String lastLine = lines[lines.length - 1].trim();
+                    String secondLastLine = lines.length > 1 ? lines[lines.length - 2].trim() : "";
+                    if (lastLine.matches("^\\d+\\.\\s.*$")) {
+                        int counter = Integer.parseInt(lastLine.split("\\.")[0]) + 1;
+                        editTextNoteContent.append("\n" + counter + ". ");
+                        return true;
+                    } else if (secondLastLine.matches("^\\d+\\.\\s.*$")) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+        });
         return view;
     }
 
