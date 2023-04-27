@@ -7,7 +7,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,10 +23,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,24 +39,32 @@ import java.util.List;
 
 public class NoteScreen extends Fragment {
     Button btnSave;
-    ImageButton btnPen, btnTable, btnImage, btnBulletList, btnText, btnCheckList, btnShare;
+    ImageButton btnPen, btnTable, btnImage, btnBulletList, btnText, btnCheckList, btnShare,
+            btnBold, btnItalic, btnUnderline, btnAlignRight, btnAligntLeft;
+    LinearLayout textBottomSheet;
     EditText editTextNoteTitle, editTextNoteContent;
     TextView textViewCurrentDay;
-    MainScreen mainScreen;
     List<Note> noteList;
-    boolean hasBullet = false;
+    BottomSheetBehavior bottomSheetBehavior;
+    boolean hasBullet = false, hasBold = false, hasItalic =false, hasUnderline = false,
+    hasBoldItalic = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_new_note, container, false);
+        View view = inflater.inflate(R.layout.new_note, container, false);
         btnSave = view.findViewById(R.id.btnSave);
         btnShare = view.findViewById(R.id.btnShare);
+        btnBulletList = view.findViewById(R.id.btnBulletList);
+        btnText = view.findViewById(R.id.btnText);
+        btnBold = view.findViewById(R.id.btnBoldText);
+        btnItalic= view.findViewById(R.id.btnItalic);
+        btnUnderline = view.findViewById(R.id.btnUnderline);
+        textBottomSheet = view.findViewById(R.id.text_bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(textBottomSheet);
         editTextNoteTitle = view.findViewById(R.id.editTextNoteTitle);
         editTextNoteContent = view.findViewById(R.id.editTextNoteContent);
         textViewCurrentDay = view.findViewById(R.id.textViewCurrentDay);
-        mainScreen = (MainScreen)getActivity();
-
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
         String dateTime = day_month_year_time.format(calendar.getTime());
@@ -55,6 +72,108 @@ public class NoteScreen extends Fragment {
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Note");
+
+        btnText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED){
+                    StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                    StyleSpan italicSpan = new StyleSpan(Typeface.ITALIC);
+                    UnderlineSpan underlineSpan = new UnderlineSpan();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    btnBold.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int selectionStart = editTextNoteContent.getSelectionStart();
+                            String text = editTextNoteContent.getText().toString();
+                            int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
+                            int lineEnd = text.indexOf("\n", selectionStart);
+                            if (lineEnd == -1) {
+                                lineEnd = text.length();
+                            }
+
+                            String currentLine = text.substring(lineStart, lineEnd);
+                            SpannableString line = new SpannableString(currentLine);
+
+                            if(!hasBold){
+                                line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Log.d("CurrentLine", String.valueOf(line));
+                                hasBold = !hasBold;
+                            }
+                            else{
+                                line.removeSpan(boldSpan);
+                                line.removeSpan(italicSpan);
+                                hasBold = false;
+                            }
+                            SpannableStringBuilder builder = new SpannableStringBuilder(text);
+                            builder.replace(lineStart, lineEnd, line);
+                            editTextNoteContent.setText(builder);
+                            editTextNoteContent.setSelection(lineEnd);
+                        }
+                    });
+                    btnItalic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int selectionStart = editTextNoteContent.getSelectionStart();
+                            String text = editTextNoteContent.getText().toString();
+                            int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
+                            int lineEnd = text.indexOf("\n", selectionStart);
+                            if (lineEnd == -1) {
+                                lineEnd = text.length();
+                            }
+
+                            String currentLine = text.substring(lineStart, lineEnd);
+                            SpannableString line = new SpannableString(currentLine);
+
+                            if(!hasItalic){
+                                line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Log.d("CurrentLine", String.valueOf(line));
+                                hasItalic = !hasItalic;
+                            }
+                            else{
+                                line.removeSpan(italicSpan);
+                                hasItalic = false;
+                            }
+                            SpannableStringBuilder builder = new SpannableStringBuilder(text);
+                            builder.replace(lineStart, lineEnd, line);
+                            editTextNoteContent.setText(builder);
+                            editTextNoteContent.setSelection(lineEnd);
+                        }
+                    });
+                    btnUnderline.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int selectionStart = editTextNoteContent.getSelectionStart();
+                            String text = editTextNoteContent.getText().toString();
+                            int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
+                            int lineEnd = text.indexOf("\n", selectionStart);
+                            if (lineEnd == -1) {
+                                lineEnd = text.length();
+                            }
+
+                            String currentLine = text.substring(lineStart, lineEnd);
+                            SpannableString line = new SpannableString(currentLine);
+
+                            if(!hasUnderline){
+                                line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                Log.d("CurrentLine", String.valueOf(line));
+                                hasUnderline = !hasUnderline;
+                            }
+                            else{
+                                line.removeSpan(underlineSpan);
+                                hasUnderline = false;
+                            }
+                            SpannableStringBuilder builder = new SpannableStringBuilder(text);
+                            builder.replace(lineStart, lineEnd, line);
+                            editTextNoteContent.setText(builder);
+                            editTextNoteContent.setSelection(lineEnd);
+                        }
+                    });
+                }else{
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+        });
 
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
