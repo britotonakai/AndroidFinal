@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -46,8 +47,8 @@ public class NoteScreen extends Fragment {
     TextView textViewCurrentDay;
     List<Note> noteList;
     BottomSheetBehavior bottomSheetBehavior;
-    boolean hasBullet = false, hasBold = false, hasItalic =false, hasUnderline = false,
-    hasBoldItalic = false;
+    boolean hasBullet = false, hasBold = false, hasItalic =false, hasUnderline = false;
+
 
     @Nullable
     @Override
@@ -72,6 +73,7 @@ public class NoteScreen extends Fragment {
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Note");
+
 
         btnText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,56 +244,53 @@ public class NoteScreen extends Fragment {
             }
         });
 
+        //bullet and numbering lines
         editTextNoteContent.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    int selectionStart = editTextNoteContent.getSelectionStart();
-                    String text = editTextNoteContent.getText().toString();
-                    int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
-                    int lineEnd = text.indexOf("\n", selectionStart);
-                    if (lineEnd == -1) {
-                        lineEnd = text.length();
-                    }
-                    String currentLine = text.substring(lineStart, lineEnd);
-                    int bulletIndex = currentLine.indexOf("• ");
-                    if (bulletIndex == -1) {
-                        int previousLineEnd = text.lastIndexOf("\n", lineStart - 2);
-                        if (previousLineEnd == -1) {
-                            previousLineEnd = 0;
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    if(event.getAction() == KeyEvent.ACTION_UP){
+                        int selectionStart = editTextNoteContent.getSelectionStart();
+                        String text = editTextNoteContent.getText().toString();
+                        int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
+                        int lineEnd = text.indexOf("\n", selectionStart);
+                        if (lineEnd == -1) {
+                            lineEnd = text.length();
                         }
-                        String previousLine = text.substring(previousLineEnd, lineStart - 1);
-                        int previousBulletIndex = previousLine.indexOf("• ");
-                        if (previousBulletIndex != -1) {
-                            editTextNoteContent.getText().insert(lineStart, "• ");
-                            editTextNoteContent.setSelection(selectionStart + 2);
-                            hasBullet = true;
+                        String currentLine = text.substring(lineStart, lineEnd);
+                        int bulletIndex = currentLine.indexOf("• ");
+                        if (bulletIndex == -1) {
+                            int previousLineEnd = text.lastIndexOf("\n", lineStart - 2);
+                            if (previousLineEnd == -1) {
+                                previousLineEnd = 0;
+                            }
+                            String previousLine = text.substring(previousLineEnd, lineStart - 1);
+                            int previousBulletIndex = previousLine.indexOf("• ");
+                            if (previousBulletIndex != -1) {
+                                editTextNoteContent.getText().insert(lineStart, "• ");
+                                editTextNoteContent.setSelection(selectionStart + 2);
+                                hasBullet = true;
+                            }
                         }
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-        //numbering lines
-        editTextNoteContent.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    String[] lines = editTextNoteContent.getText().toString().split("\n");
-                    String lastLine = lines[lines.length - 1].trim();
-                    String secondLastLine = lines.length > 1 ? lines[lines.length - 2].trim() : "";
-                    if (lastLine.matches("^\\d+\\.\\s.*$")) {
-                        int counter = Integer.parseInt(lastLine.split("\\.")[0]) + 1;
-                        editTextNoteContent.append("\n" + counter + ". ");
                         return true;
-                    } else if (secondLastLine.matches("^\\d+\\.\\s.*$")) {
-                        return false;
+                    } else if (event.getAction() == KeyEvent.ACTION_DOWN) {
+
+                        String[] lines = editTextNoteContent.getText().toString().split("\n");
+                        String lastLine = lines[lines.length - 1].trim();
+                        String secondLastLine = lines.length > 1 ? lines[lines.length - 2].trim() : "";
+                        if (lastLine.matches("^\\d+\\.\\s.*$")) {
+                            int counter = Integer.parseInt(lastLine.split("\\.")[0]) + 1;
+                            editTextNoteContent.append("\n" + counter + ". ");
+                            return true;
+                        } else if (secondLastLine.matches("^\\d+\\.\\s.*$")) {
+                            return false;
+                        }
                     }
                 }
                 return false;
             }
         });
+
         return view;
     }
 
