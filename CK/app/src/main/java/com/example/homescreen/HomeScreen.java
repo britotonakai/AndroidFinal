@@ -42,7 +42,7 @@ public class HomeScreen extends Fragment implements NoteAdapter.OnPopupMenuItemC
     RecyclerView noteList;
     NoteAdapter noteAdapter;
     List<Note> list = new ArrayList<>();
-    EditNoteScreen editNoteScreen = new EditNoteScreen();
+//    EditNoteScreen editNoteScreen = new EditNoteScreen();
 
     @Nullable
     @Override
@@ -122,10 +122,10 @@ public class HomeScreen extends Fragment implements NoteAdapter.OnPopupMenuItemC
 //                AlertDialog editDialog = editBuilder.create();
 //                editDialog.getWindow().setLayout(10,20);
 //                editDialog.show();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.ConstrainLayout, editNoteScreen);
-                fragmentTransaction.commit();
+//                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.ConstrainLayout, editNoteScreen);
+//                fragmentTransaction.commit();
 
 //                IntentFilter intentFilter = new IntentFilter();
 //                intentFilter.addAction("Send ID");

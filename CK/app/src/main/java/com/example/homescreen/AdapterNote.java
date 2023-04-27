@@ -3,12 +3,15 @@ package com.example.homescreen;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +27,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdapterNote extends RecyclerView.Adapter<AdapterNote.NoteRecyclerView>{
     Context context;
@@ -68,7 +77,7 @@ public class AdapterNote extends RecyclerView.Adapter<AdapterNote.NoteRecyclerVi
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        DatabaseReference removeNote = FirebaseDatabase.getInstance().getReference("Note");
+                        DatabaseReference databaseNote = FirebaseDatabase.getInstance().getReference("Note");
 
                         switch(menuItem.getItemId()){
                             case R.id.btnEdit:
@@ -77,12 +86,58 @@ public class AdapterNote extends RecyclerView.Adapter<AdapterNote.NoteRecyclerVi
                                 View editView = edit.inflate(R.layout.edit_note, null);
                                 editDialog.setContentView(editView);
                                 editDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                EditText noteTitle = editView.findViewById(R.id.editTitle);
+                                EditText noteContent = editView.findViewById(R.id.editContent);
+                                TextView noteCurrentDay = editView.findViewById(R.id.textViewEditCurrentDay);
+                                Button btnEdit = editView.findViewById(R.id.btnConfirmEdit);
+                                Button btnCancel = editView.findViewById(R.id.btnCancel);
+                                ImageButton btnShare = editView.findViewById(R.id.btnEditShare);
 
-//                                EditScreenDialog editScreenDialog = new EditScreenDialog(context);
-                                Log.d("Note Tilte Edit", note.getNoteTitle());
-//                                editScreenDialog.editTitle.setText(note.getNoteTitle());
-//                                editScreenDialog.editContent.setText(note.getNoteContent());
-//                                editScreenDialog.show();
+                                noteCurrentDay.setText(note.getNoteDateTime());
+                                noteTitle.setText(note.getNoteTitle());
+                                noteContent.setText(note.getNoteContent());
+
+                                btnShare.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent shareIntent = new Intent();
+                                        shareIntent.setAction(Intent.ACTION_SEND);
+                                        shareIntent.putExtra(Intent.EXTRA_TEXT, noteTitle.getText().toString());
+                                        shareIntent.putExtra(Intent.EXTRA_TEXT, noteContent.getText().toString());
+                                        shareIntent.setType("text/plain");
+
+                                        if(shareIntent.resolveActivity(context.getPackageManager()) != null){
+                                            context.startActivity(shareIntent);
+                                        }
+
+                                    }
+                                });
+
+                                btnEdit.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        DatabaseReference noteChild = databaseNote.child(note.getNoteID());
+                                        Calendar calendar = Calendar.getInstance();
+                                        SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                                        String dateTime = day_month_year_time.format(calendar.getTime());
+                                        noteCurrentDay.setText(dateTime);
+
+                                        Map<String, Object> updateNote = new HashMap<>();
+                                        updateNote.put("noteTitle", noteTitle.getText().toString());
+                                        updateNote.put("noteContent", noteContent.getText().toString());
+                                        updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
+                                        noteChild.updateChildren(updateNote);
+                                        editDialog.dismiss();
+                                        notifyDataSetChanged();
+                                    }
+                                });
+
+                                btnCancel.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        editDialog.dismiss();
+                                    }
+                                });
                                 editDialog.show();
                                 return true;
                             case R.id.btnDelete:
@@ -99,7 +154,7 @@ public class AdapterNote extends RecyclerView.Adapter<AdapterNote.NoteRecyclerVi
                                                 for(int j = listNote.size() - 1; j >= 0; j--){
                                                     if(j == which){
                                                         String noteID = listNote.get(j).getNoteID();
-                                                        Query removeQuery = removeNote.child("Note").orderByChild("noteID").equalTo(noteID);
+                                                        Query removeQuery = databaseNote.child("Note").orderByChild("noteID").equalTo(noteID);
                                                         removeQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -38,7 +38,7 @@ public class EditNoteScreen extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_note, container, false);
-        btnSave = view.findViewById(R.id.btnEditSave);
+//        btnSave = view.findViewById(R.id.btnEditSave);
         btnShare = view.findViewById(R.id.btnEditShare);
         editTextNoteTitle = view.findViewById(R.id.editTitle);
         editTextNoteContent = view.findViewById(R.id.editContent);
