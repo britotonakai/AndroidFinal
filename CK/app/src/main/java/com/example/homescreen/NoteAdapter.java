@@ -95,7 +95,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         void onPopupMenuItemClick(MenuItem item);
     }
 
-    public class NoteRecyclerView extends RecyclerView.ViewHolder{
+    public static class NoteRecyclerView extends RecyclerView.ViewHolder{
 
         TextView noteTitle, noteDateTime, textViewLastEdit;
 
