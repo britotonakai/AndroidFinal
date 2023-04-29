@@ -2,14 +2,14 @@ package com.example.homescreen;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ListAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,6 +19,8 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecy
     Context context;
     NoteAdapter.OnPopupMenuItemClickListener mListener;
     List<Folder> listFolder = new ArrayList<>();
+
+    AllFolderScreen allFolderScreen = new AllFolderScreen();
 
 
     public FolderAdapter(Context context){
@@ -53,9 +55,11 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecy
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
-//                MenuInflater inflater = popupMenu.getMenuInflater();
-//                inflater.inflate(R.menu.list_note_button, popupMenu.getMenu());
+                Fragment current = FragmentManager.findFragment(view);
+                FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.allFolderScreen, new AllNoteScreen_FolderScreen());
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
     }
