@@ -33,6 +33,42 @@
         app:layout_constraintVertical_bias="0.204" />
 
     <Button
+        android:id="@+id/btn_decrease"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decrease"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.856"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.313" />
+
+    <Button
+        android:id="@+id/btn_increase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Increase"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.299"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.313" />
+
+    <Button
+        android:id="@+id/btn_bullet3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BULLET"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.297"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.204" />
+
+    <Button
         android:id="@+id/btn_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,6 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:lineSpacingExtra="10dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

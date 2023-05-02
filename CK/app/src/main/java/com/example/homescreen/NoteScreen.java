@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -64,6 +65,8 @@ public class NoteScreen extends Fragment {
         btnBold = view.findViewById(R.id.btnBoldText);
         btnItalic= view.findViewById(R.id.btnItalic);
         btnUnderline = view.findViewById(R.id.btnUnderline);
+        btnAlignRight = view.findViewById(R.id.btnAlignRight);
+        btnAlignLeft = view.findViewById(R.id.btnAlignLeft);
         btnTitle = view.findViewById(R.id.btnTextTitle);
         btnHeading = view.findViewById(R.id.btnTextHeading);
         btnSubheading = view.findViewById(R.id.btnTextSubheading);
@@ -135,6 +138,88 @@ public class NoteScreen extends Fragment {
                         public void onClick(View view) {
                             hasUnderline = !hasUnderline;
                             applyTextChange();
+                        }
+                    });
+                    //Increase indent
+                    btnAlignRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int selectionStart = editTextNoteContent.getSelectionStart();
+                            int selectionEnd = editTextNoteContent.getSelectionEnd();
+                            Editable text = editTextNoteContent.getText();
+                            String indent = "     "; // 5 spaces for each indent level
+
+                            if (selectionStart == selectionEnd) {
+                                // Insert an indent at the start of the current line
+                                int lineStart = selectionStart;
+                                while (lineStart > 0 && text.charAt(lineStart - 1) != '\n') {
+                                    lineStart--;
+                                }
+                                text.insert(lineStart, indent);
+                                editTextNoteContent.setSelection(selectionStart + indent.length());
+                            } else {
+                                // Indent each line of the selected text
+                                String selectedText = text.subSequence(selectionStart, selectionEnd).toString();
+                                String[] lines = selectedText.split("\\r?\\n");
+                                StringBuilder sb = new StringBuilder();
+                                for (String line : lines) {
+                                    sb.append(indent).append(line).append("\n");
+                                }
+                                text.replace(selectionStart, selectionEnd, sb.toString());
+                                editTextNoteContent.setSelection(selectionEnd + indent.length() * lines.length);
+                            }
+
+                            // Enable the decrease button after indenting
+                            btnAlignLeft.setEnabled(true);
+                        }
+                    });
+                    //Decrease indent
+                    btnAlignLeft.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int selectionStart = editTextNoteContent.getSelectionStart();
+                            int selectionEnd = editTextNoteContent.getSelectionEnd();
+                            Editable text = editTextNoteContent.getText();
+                            String indent = "     "; // 5 spaces for each indent level
+
+                            if (selectionStart == selectionEnd) {
+                                // Remove an indent at the start of the current line
+                                int lineStart = selectionStart;
+                                while (lineStart > 0 && text.charAt(lineStart - 1) != '\n') {
+                                    lineStart--;
+                                }
+                                String line = text.subSequence(lineStart, selectionStart).toString();
+                                if (line.startsWith(indent)) {
+                                    text.delete(lineStart, lineStart + indent.length());
+                                    editTextNoteContent.setSelection(selectionStart - indent.length());
+                                }
+                            } else {
+                                // Remove indent from each line of the selected text
+                                String selectedText = text.subSequence(selectionStart, selectionEnd).toString();
+                                String[] lines = selectedText.split("\\r?\\n");
+                                StringBuilder sb = new StringBuilder();
+                                boolean hasIndent = false;
+                                for (String line : lines) {
+                                    if (line.startsWith(indent)) {
+                                        sb.append(line.substring(indent.length())).append("\n");
+                                        hasIndent = true;
+                                    } else {
+                                        sb.append(line).append("\n");
+                                    }
+                                }
+                                text.replace(selectionStart, selectionEnd, sb.toString());
+                                editTextNoteContent.setSelection(selectionEnd - indent.length() * lines.length);
+
+                                // Disable decrease button if no lines have indent left
+                                if (!hasIndent) {
+                                    btnAlignLeft.setEnabled(false);
+                                }
+                            }
+
+                            // Disable decrease button if cursor is at start of text
+                            if (editTextNoteContent.getSelectionStart() == 0) {
+                                btnAlignLeft.setEnabled(false);
+                            }
                         }
                     });
                     btnTitle.setOnClickListener(new View.OnClickListener() {
@@ -330,7 +415,7 @@ public class NoteScreen extends Fragment {
             }
         });
 
-        //bullet and numbering lines
+        //bullet, numbering lines, increase-decrease indent
         editTextNoteContent.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -364,6 +449,10 @@ public class NoteScreen extends Fragment {
                         String[] lines = editTextNoteContent.getText().toString().split("\n");
                         String lastLine = lines[lines.length - 1].trim();
                         String secondLastLine = lines.length > 1 ? lines[lines.length - 2].trim() : "";
+                        int cursorPos = editTextNoteContent.getSelectionStart();
+                        int prevLineStart = cursorPos - 1;
+                        String indent = "";
+                        Editable text = editTextNoteContent.getText();
                         if (lastLine.matches("^\\d+\\.\\s.*$")) {
                             int counter = Integer.parseInt(lastLine.split("\\.")[0]) + 1;
                             editTextNoteContent.append("\n" + counter + ". ");
@@ -371,6 +460,23 @@ public class NoteScreen extends Fragment {
                         } else if (secondLastLine.matches("^\\d+\\.\\s.*$")) {
                             return false;
                         }
+                        if (prevLineStart >= 0) {
+                            while (prevLineStart >= 0 && text.charAt(prevLineStart) != '\n') {
+                                prevLineStart--;
+                            }
+                            indent = text.subSequence(prevLineStart + 1, cursorPos).toString().replaceAll("[^\\s].*$", "");
+                        } else {
+                            int indentStart = cursorPos;
+                            while (indentStart > 0 && text.charAt(indentStart - 1) == ' ') {
+                                indentStart--;
+                            }
+                            indent = text.subSequence(indentStart, cursorPos).toString();
+                        }
+
+                        // Insert new line with the same indentation
+                        text.insert(cursorPos, "\n" + indent);
+                        editTextNoteContent.setSelection(cursorPos + indent.length() + 1);
+                        return true;
                     }
                 }
                 return false;

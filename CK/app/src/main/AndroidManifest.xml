@@ -12,14 +12,17 @@
         android:theme="@style/Theme.HomeScreen"
         tools:targetApi="31">
         <activity
+            android:name=".ChecklistActivity"
+            android:exported="false" />
+        <activity
             android:name=".TestDatabaseActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".MainScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,8 +40,8 @@
             android:exported="false" />
         <activity
             android:name=".HomeScreen"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
+
     </application>
 
 </manifest>
