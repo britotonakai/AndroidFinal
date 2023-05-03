@@ -17,9 +17,9 @@
         android:layout_below="@+id/newTaskText"
         android:layout_alignParentEnd="true"
         android:textSize="16sp"
-        android:backgroundTint="#3f5e48"
+        android:backgroundTint="#F9BFB6"
         android:text="Save"
-        android:textColor="#e6f2e9"
+        android:textColor="#2B2C2B"
         android:textAllCaps="false" />
 
 </RelativeLayout>

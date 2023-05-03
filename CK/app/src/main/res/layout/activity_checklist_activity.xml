@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChecklistActivity"
-    android:background="#d0e3c1">
+    android:background="@color/background_color">
 
 
     <TextView
@@ -44,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.937"
-        android:backgroundTint="#497d1b"
+        android:backgroundTint="#CCD5AE"
         app:borderWidth="0dp"
         android:src="@drawable/add_task"/>
 
