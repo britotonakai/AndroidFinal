@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,8 +38,10 @@ import java.util.List;
 public class AllNoteScreen_FolderScreen extends Fragment {
     RecyclerView noteList;
     FolderAdapter folderAdapter;
+    TextView folderDirectory;
     NoteAdapter noteAdapter;
     ImageButton btnNote, btnFolder;
+    Button btnBack;
     List<Folder> folder = new ArrayList<>();
     List<Note> note = new ArrayList<>();
 
@@ -49,75 +53,66 @@ public class AllNoteScreen_FolderScreen extends Fragment {
 
         btnFolder = view.findViewById(R.id.btnFolder);
         btnNote = view.findViewById(R.id.btnNote);
+        btnBack = view.findViewById(R.id.btnBack);
+        folderDirectory = view.findViewById(R.id.folderDirect);
 
         noteAdapter = new NoteAdapter(getContext());
         DatabaseReference databaseFolder = FirebaseDatabase.getInstance().getReference("Folder");
         DatabaseReference databaseNote = databaseFolder.child("Note");
 
-        btnFolder.setOnClickListener(new View.OnClickListener() {
+        folderDirectory.setText("All Notes");
 
-            @Override
-            public void onClick(View view) {
-                Dialog folderDialog = new Dialog(getContext());
-                LayoutInflater folderInflater = LayoutInflater.from(getContext());
-                View view1 = folderInflater.inflate(R.layout.activity_create_folder, null);
-                EditText editTextFolderName = view1.findViewById(R.id.editTextFolderName);
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat day_month_year_time = new SimpleDateFormat("dd/LLLL/yyyy");
-                String dateTime = day_month_year_time.format(calendar.getTime());
-                Button btnCreate = view1.findViewById(R.id.btnCreateFolder);
-                Button btnCancel = view1.findViewById(R.id.btnCancelFolder);
-
-                btnCreate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String key = databaseFolder.push().getKey();
-                        folder = new ArrayList<>();
-                        Folder currentFolder = new Folder(key, editTextFolderName.getText().toString(), dateTime);
-                        folder.add(currentFolder);
-                        databaseFolder.child(key).setValue(currentFolder)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Xử lý khi lưu trữ thất bại
-                                        Log.d(TAG, "Data could not be saved: " + e.getMessage());
-                                    }
-                                });
-                        folderDialog.dismiss();
-                    }
-                });
-
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        folderDialog.dismiss();
-                    }
-                });
-
-                folderDialog.setContentView(view1);
-                folderDialog.getWindow().setLayout(1350, 700);
-                folderDialog.show();
-            }
+        btnBack.setOnClickListener(view12 -> {
+            Fragment current = FragmentManager.findFragment(view);
+            FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.allFolderScreen, new AllFolderScreen());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
-        btnNote.setOnClickListener(new View.OnClickListener() {
+        btnFolder.setOnClickListener(view13 -> {
+            Dialog folderDialog = new Dialog(getContext());
+            LayoutInflater folderInflater = LayoutInflater.from(getContext());
+            View view1 = folderInflater.inflate(R.layout.activity_create_folder, null);
+            EditText editTextFolderName = view1.findViewById(R.id.editTextFolderName);
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat day_month_year_time = new SimpleDateFormat("dd/LLLL/yyyy");
+            String dateTime = day_month_year_time.format(calendar.getTime());
+            Button btnCreate = view1.findViewById(R.id.btnCreateFolder);
+            Button btnCancel = view1.findViewById(R.id.btnCancelFolder);
 
-            @Override
-            public void onClick(View view) {
-                Fragment current = FragmentManager.findFragment(view);
-                FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.allFolderScreen, new NoteScreen());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+
+            btnCreate.setOnClickListener(view2 -> {
+                String key = databaseFolder.push().getKey();
+                folder = new ArrayList<>();
+                Folder currentFolder = new Folder(key, editTextFolderName.getText().toString(), dateTime);
+                folder.add(currentFolder);
+                databaseFolder.child(key).setValue(currentFolder)
+                        .addOnSuccessListener(aVoid -> {
+
+                        })
+                        .addOnFailureListener(e -> {
+                            // Xử lý khi lưu trữ thất bại
+                            Log.d(TAG, "Data could not be saved: " + e.getMessage());
+                        });
+                folderDialog.dismiss();
+            });
+
+            btnCancel.setOnClickListener(view2 -> folderDialog.dismiss());
+
+            folderDialog.setContentView(view1);
+            folderDialog.getWindow().setLayout(1350, 700);
+            folderDialog.show();
         });
 
+        btnNote.setOnClickListener(view14 -> {
+            Fragment current = FragmentManager.findFragment(view14);
+            FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
+            NoteScreen noteScreen = new NoteScreen();
+            transaction.replace(R.id.allFolderScreen, noteScreen);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
 
         databaseNote.addValueEventListener(new ValueEventListener() {
             @Override

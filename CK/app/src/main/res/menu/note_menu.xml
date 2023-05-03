@@ -10,12 +10,12 @@
     <item
         android:icon="@drawable/baseline_list_alt_24"
         android:id="@+id/allFolderScreen"
-        android:title="ListFolder"
+        android:title="Folder"
         app:showAsAction="always" />
     <item
         android:icon="@drawable/baseline_edit_24"
         android:id="@+id/noteScreen"
-        android:title="CreateNote"
+        android:title="New"
         app:showAsAction="always" />
     <item
         android:icon="@drawable/baseline_delete_24"

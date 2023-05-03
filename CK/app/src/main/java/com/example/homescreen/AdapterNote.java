@@ -97,47 +97,36 @@ public class AdapterNote extends RecyclerView.Adapter<AdapterNote.NoteRecyclerVi
                                 noteTitle.setText(note.getNoteTitle());
                                 noteContent.setText(note.getNoteContent());
 
-                                btnShare.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Intent shareIntent = new Intent();
-                                        shareIntent.setAction(Intent.ACTION_SEND);
-                                        shareIntent.putExtra(Intent.EXTRA_TEXT, noteTitle.getText().toString());
-                                        shareIntent.putExtra(Intent.EXTRA_TEXT, noteContent.getText().toString());
-                                        shareIntent.setType("text/plain");
+                                btnShare.setOnClickListener(view1 -> {
+                                    Intent shareIntent = new Intent();
+                                    shareIntent.setAction(Intent.ACTION_SEND);
+                                    shareIntent.putExtra(Intent.EXTRA_TEXT, noteTitle.getText().toString());
+                                    shareIntent.putExtra(Intent.EXTRA_TEXT, noteContent.getText().toString());
+                                    shareIntent.setType("text/plain");
 
-                                        if(shareIntent.resolveActivity(context.getPackageManager()) != null){
-                                            context.startActivity(shareIntent);
-                                        }
-
+                                    if(shareIntent.resolveActivity(context.getPackageManager()) != null){
+                                        context.startActivity(shareIntent);
                                     }
+
                                 });
 
-                                btnEdit.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        DatabaseReference noteChild = databaseNote.child(note.getNoteID());
-                                        Calendar calendar = Calendar.getInstance();
-                                        SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
-                                        String dateTime = day_month_year_time.format(calendar.getTime());
-                                        noteCurrentDay.setText(dateTime);
+                                btnEdit.setOnClickListener(view12 -> {
+                                    DatabaseReference noteChild = databaseNote.child(note.getNoteID());
+                                    Calendar calendar = Calendar.getInstance();
+                                    SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                                    String dateTime = day_month_year_time.format(calendar.getTime());
+                                    noteCurrentDay.setText(dateTime);
 
-                                        Map<String, Object> updateNote = new HashMap<>();
-                                        updateNote.put("noteTitle", noteTitle.getText().toString());
-                                        updateNote.put("noteContent", noteContent.getText().toString());
-                                        updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
-                                        noteChild.updateChildren(updateNote);
-                                        editDialog.dismiss();
-                                        notifyDataSetChanged();
-                                    }
+                                    Map<String, Object> updateNote = new HashMap<>();
+                                    updateNote.put("noteTitle", noteTitle.getText().toString());
+                                    updateNote.put("noteContent", noteContent.getText().toString());
+                                    updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
+                                    noteChild.updateChildren(updateNote);
+                                    editDialog.dismiss();
+                                    notifyDataSetChanged();
                                 });
 
-                                btnCancel.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        editDialog.dismiss();
-                                    }
-                                });
+                                btnCancel.setOnClickListener(view13 -> editDialog.dismiss());
                                 editDialog.show();
                                 return true;
                             case R.id.btnDelete:
