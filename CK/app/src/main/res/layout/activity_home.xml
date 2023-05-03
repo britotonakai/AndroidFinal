@@ -37,8 +37,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="382dp"
-        android:layout_height="34dp"
+        android:layout_width="395dp"
+        android:layout_height="45dp"
         android:layout_marginTop="35dp"
         android:background="#1B000000"
         android:minHeight="?attr/actionBarSize"
@@ -50,29 +50,17 @@
 
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="35dp"
-        android:layout_height="34dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
-
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#00FFFFFF"
-        android:ems="10"
-        android:hint="find some note you're missing"
-        android:inputType="textPersonName"
-        android:paddingBottom="5dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/search_view_bg"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search note you're missing..."
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/searchView"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/textViewRecently"

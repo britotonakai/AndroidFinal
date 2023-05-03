@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,12 +20,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class IndexScreen extends Fragment {
     RecyclerView noteList;
     AdapterNote noteAdapter;
+    SearchView searchView;
     int someVariable;
     List<Note> list = new ArrayList<>();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -36,6 +43,7 @@ public class IndexScreen extends Fragment {
         View view = inflater.inflate(R.layout.activity_home, container, false);
         noteList = view.findViewById(R.id.noteList);
         noteAdapter = new AdapterNote(getActivity());
+        searchView = view.findViewById(R.id.searchView);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -47,6 +55,23 @@ public class IndexScreen extends Fragment {
                     String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
                     list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
                 }
+
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                Collections.sort(list, new Comparator<Note>() {
+                    @Override
+                    public int compare(Note note1, Note note2) {
+                        Date date1 = null;
+                        Date date2 = null;
+                        try {
+                            date1 = format.parse(note1.noteDateTime);
+                            date2 = format.parse(note2.noteDateTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        return date2.compareTo(date1);
+                    }
+                });
+
                 noteAdapter.setNoteData(list);
                 noteAdapter.notifyDataSetChanged();
             }
@@ -60,6 +85,25 @@ public class IndexScreen extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         noteList.setLayoutManager(gridLayoutManager);
         noteList.setAdapter(noteAdapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                List<Note> filteredList = new ArrayList<>();
+                for (Note note : list) {
+                    if (note.getNoteTitle().toLowerCase().contains(s.toLowerCase())) {
+                        filteredList.add(note);
+                    }
+                }
+                noteAdapter.setNoteData(filteredList);
+                return true;
+            }
+        });
         return view;
     }
 
