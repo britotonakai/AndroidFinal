@@ -1,5 +1,7 @@
 package com.example.homescreen;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -7,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +35,7 @@ public class IndexScreen extends Fragment {
     RecyclerView noteList;
     AdapterNote noteAdapter;
     SearchView searchView;
+    TextView textViewRecently, textViewPinned;
     int someVariable;
     List<Note> list = new ArrayList<>();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -44,43 +48,66 @@ public class IndexScreen extends Fragment {
         noteList = view.findViewById(R.id.noteList);
         noteAdapter = new AdapterNote(getActivity());
         searchView = view.findViewById(R.id.searchView);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        textViewRecently = view.findViewById(R.id.textViewRecently);
+        textViewPinned = view.findViewById(R.id.textViewPinned);
+        textViewRecently.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                    String noteID = String.valueOf(snapshot1.child("noteID").getValue());
-                    String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
-                    String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
-                    String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
-                    list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
-                }
-
-                SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
-                Collections.sort(list, new Comparator<Note>() {
+            public void onClick(View view) {
+                textViewRecently.setTextColor(Color.parseColor("#E28F83"));
+                textViewRecently.setTypeface(textViewRecently.getTypeface(), Typeface.BOLD);
+                textViewPinned.setTextColor(Color.BLACK);
+                textViewPinned.setTypeface(null, Typeface.NORMAL);
+                databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public int compare(Note note1, Note note2) {
-                        Date date1 = null;
-                        Date date2 = null;
-                        try {
-                            date1 = format.parse(note1.noteDateTime);
-                            date2 = format.parse(note2.noteDateTime);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list.clear();
+                        for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                            String noteID = String.valueOf(snapshot1.child("noteID").getValue());
+                            String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
+                            String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
+                            String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
+                            list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
                         }
-                        return date2.compareTo(date1);
+
+                        SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                        Collections.sort(list, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note note1, Note note2) {
+                                Date date1 = null;
+                                Date date2 = null;
+                                try {
+                                    date1 = format.parse(note1.noteDateTime);
+                                    date2 = format.parse(note2.noteDateTime);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                return date2.compareTo(date1);
+                            }
+                        });
+
+                        noteAdapter.setNoteData(list);
+                        noteAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
-
-                noteAdapter.setNoteData(list);
-                noteAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+        textViewRecently.performClick();
+
+        textViewPinned.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewPinned.setTextColor(Color.parseColor("#8E9775"));
+                textViewPinned.setTypeface(textViewRecently.getTypeface(), Typeface.BOLD);
+                textViewRecently.setTextColor(Color.BLACK);
+                textViewRecently.setTypeface(null, Typeface.NORMAL);
+            }
+        });
+
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         noteList.setLayoutManager(gridLayoutManager);
@@ -96,7 +123,7 @@ public class IndexScreen extends Fragment {
             public boolean onQueryTextChange(String s) {
                 List<Note> filteredList = new ArrayList<>();
                 for (Note note : list) {
-                    if (note.getNoteTitle().toLowerCase().contains(s.toLowerCase())) {
+                    if (note.getNoteTitle().toLowerCase().contains(s.toLowerCase()) || note.getNoteContent().toLowerCase().contains(s.toLowerCase())) {
                         filteredList.add(note);
                     }
                 }
