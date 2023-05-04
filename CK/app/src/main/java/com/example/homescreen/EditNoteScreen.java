@@ -30,7 +30,7 @@ public class EditNoteScreen extends Fragment {
     ImageButton btnPen, btnTable, btnImage, btnBulletList, btnText, btnCheckList, btnShare;
     EditText editTextNoteTitle, editTextNoteContent;
     TextView textViewCurrentDay;
-    MainScreen mainScreen;
+    NavigationScreen mainScreen;
     String noteTitle = "", noteContent = "";
     List<Note> noteList = new ArrayList<>();
 
@@ -85,47 +85,4 @@ public class EditNoteScreen extends Fragment {
         return view;
     }
 
-//    public String getNoteTitle(){
-//        return noteTitle;
-//    }
-//
-//    public String getNoteContent(){
-//        return noteContent;
-//    }
-//
-//    public void readNote(){
-//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-//        DatabaseReference databaseReference = firebaseDatabase.getReference("Note");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for(DataSnapshot snapshot1 : snapshot.getChildren()){
-//                    String noteID = String.valueOf(snapshot1.child("noteID").getValue());
-//                    String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
-//                    String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
-//                    String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
-//                    noteList.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
-//                }
-//                IntentFilter positionFilter = new IntentFilter();
-//                positionFilter.addAction("Send ID");
-//                getContext().registerReceiver(new BroadcastReceiver() {
-//                    @Override
-//                    public void onReceive(Context context, Intent intent) {
-//                        int position = intent.getIntExtra("ID", 0);
-//
-//                        Log.d("noteID Home Screen", noteList.get(position).getNoteID());
-//
-//                        Log.d("noteTitle Home Screen", noteList.get(position).getNoteTitle());
-//
-//                        Log.d("noteContent Home Screen", noteList.get(position).getNoteContent());
-//                    }
-//                }, positionFilter);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
     }

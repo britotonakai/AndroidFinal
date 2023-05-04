@@ -9,9 +9,9 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainScreen extends AppCompatActivity {
+public class NavigationScreen extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
-    Fragment homeScreen, noteScreen, trashScreen, allFolderScreen, indexScreen;
+    Fragment homeScreen, noteScreen, trashScreen, allFolderScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,18 +21,17 @@ public class MainScreen extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         noteScreen = new NoteScreen();
         homeScreen = new HomeScreen();
-        indexScreen = new IndexScreen();
         trashScreen = new TrashScreen();
         allFolderScreen = new AllFolderScreen();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, indexScreen).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeScreen).commit();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.homeScreen:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, indexScreen).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeScreen).commit();
                         return true;
                     case R.id.allFolderScreen:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, allFolderScreen).commit();
@@ -43,10 +42,6 @@ public class MainScreen extends AppCompatActivity {
                     case R.id.trashScreen:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, trashScreen).commit();
                         return true;
-//                    default:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeScreen).commit();
-//                        return true;
-
                 }
                 return false;
             }

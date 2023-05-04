@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -23,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -385,7 +383,7 @@ public class NoteScreen extends Fragment {
                                 Log.d(TAG, "Data could not be saved: " + e.getMessage());
                             }
                         });
-                Intent backIntent = new Intent(getActivity(), MainScreen.class);
+                Intent backIntent = new Intent(getActivity(), NavigationScreen.class);
                 startActivity(backIntent);
             }
         });

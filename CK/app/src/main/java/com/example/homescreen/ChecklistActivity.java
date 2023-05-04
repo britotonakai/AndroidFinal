@@ -13,7 +13,7 @@ import java.util.List;
 public class ChecklistActivity extends AppCompatActivity implements DialogCloseListener{
 
     private RecyclerView tasks;
-    private AdapterTask adapterTask;
+    private TaskAdapter adapterTask;
 
     private List<Task> taskList;
 
@@ -27,7 +27,7 @@ public class ChecklistActivity extends AppCompatActivity implements DialogCloseL
 
         tasks = findViewById(R.id.tasks);
         tasks.setLayoutManager(new LinearLayoutManager(this));
-        adapterTask = new AdapterTask(this);
+        adapterTask = new TaskAdapter(this);
         tasks.setAdapter(adapterTask);
 
         Task task = new Task();

@@ -1,42 +1,48 @@
 package com.example.homescreen;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerView>{
     Context context;
-    List<Note> listNote = new ArrayList<>();
-    OnPopupMenuItemClickListener mListener;
-
+    List<Note> listNote;
 
     public NoteAdapter(Context context){
         this.context = context;
     }
 
-    public NoteAdapter(OnPopupMenuItemClickListener listener, List<Note> noteItem){
-        this.mListener = listener;
-        this.listNote = noteItem;
-    }
-
     public void setNoteData(List<Note> listNote){
         this.listNote = listNote;
         notifyDataSetChanged();
-    }
-
-    public NoteAdapter getAdapter(){
-        return new NoteAdapter(context);
     }
 
     @NonNull
@@ -58,26 +64,121 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
-                MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.list_note_button, popupMenu.getMenu());
-//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        int position = holder.getAdapterPosition();
-//
-//                        Intent sendPosition = new Intent();
-//                        sendPosition.setAction("Send ID");
-//                        sendPosition.putExtra("ID", position);
-//                        view.getContext().sendBroadcast(sendPosition);
-//
-//                        if (mListener != null) {
-//                            mListener.onPopupMenuItemClick(item);
-//                        }
-//                        return true;
-//                    }
-//                });
-//                popupMenu.show();
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.list_note_button);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        DatabaseReference databaseNote = FirebaseDatabase.getInstance().getReference("Note");
+
+                        switch(menuItem.getItemId()){
+                            case R.id.btnEdit:
+                                Dialog editDialog = new Dialog(context);
+                                LayoutInflater edit = LayoutInflater.from(context);
+                                View editView = edit.inflate(R.layout.edit_note, null);
+                                editDialog.setContentView(editView);
+                                editDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                EditText noteTitle = editView.findViewById(R.id.editTitle);
+                                EditText noteContent = editView.findViewById(R.id.editContent);
+                                TextView noteCurrentDay = editView.findViewById(R.id.textViewEditCurrentDay);
+                                Button btnEdit = editView.findViewById(R.id.btnConfirmEdit);
+                                Button btnCancel = editView.findViewById(R.id.btnCancel);
+                                ImageButton btnShare = editView.findViewById(R.id.btnEditShare);
+
+                                noteCurrentDay.setText(note.getNoteDateTime());
+                                noteTitle.setText(note.getNoteTitle());
+                                noteContent.setText(note.getNoteContent());
+
+                                btnShare.setOnClickListener(view1 -> {
+                                    Intent shareIntent = new Intent();
+                                    shareIntent.setAction(Intent.ACTION_SEND);
+                                    shareIntent.putExtra(Intent.EXTRA_TEXT, noteTitle.getText().toString());
+                                    shareIntent.putExtra(Intent.EXTRA_TEXT, noteContent.getText().toString());
+                                    shareIntent.setType("text/plain");
+
+                                    if(shareIntent.resolveActivity(context.getPackageManager()) != null){
+                                        context.startActivity(shareIntent);
+                                    }
+
+                                });
+
+                                btnEdit.setOnClickListener(view12 -> {
+                                    DatabaseReference noteChild = databaseNote.child(note.getNoteID());
+                                    Calendar calendar = Calendar.getInstance();
+                                    SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                                    String dateTime = day_month_year_time.format(calendar.getTime());
+                                    noteCurrentDay.setText(dateTime);
+
+                                    Map<String, Object> updateNote = new HashMap<>();
+                                    updateNote.put("noteTitle", noteTitle.getText().toString());
+                                    updateNote.put("noteContent", noteContent.getText().toString());
+                                    updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
+                                    noteChild.updateChildren(updateNote);
+                                    editDialog.dismiss();
+                                    notifyDataSetChanged();
+                                });
+
+                                btnCancel.setOnClickListener(view13 -> editDialog.dismiss());
+                                editDialog.show();
+                                return true;
+                            case R.id.btnDelete:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle("Delete note");
+                                builder.setMessage("Are you sure to delete this note ?");
+                                builder.setPositiveButton("Delete",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                for(int i = 0; i < listNote.size(); i++){
+                                                    which = i;
+                                                }
+                                                for(int j = listNote.size() - 1; j >= 0; j--){
+                                                    if(j == which){
+                                                        String noteID = listNote.get(j).getNoteID();
+                                                        Query removeQuery = databaseNote.child("Note").orderByChild("noteID").equalTo(noteID);
+                                                        removeQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot noteSnapshot: snapshot.getChildren()) {
+                                                                    noteSnapshot.getRef().removeValue();
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
+                                                        listNote.remove(j);
+                                                        Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                                builder.setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                                break;
+                            case R.id.btnPin:
+                                Toast.makeText(context, "Pin", Toast.LENGTH_SHORT).show();
+                                return true;
+                            case R.id.btnLock:
+                                Toast.makeText(context, "Lock", Toast.LENGTH_SHORT).show();
+                                return true;
+                            default:
+                                return false;
+                        }
+                        return true;
+                    }
+                });
             }
         });
 
@@ -91,11 +192,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         return 0;
     }
 
-    public interface OnPopupMenuItemClickListener {
-        void onPopupMenuItemClick(MenuItem item);
-    }
 
-    public static class NoteRecyclerView extends RecyclerView.ViewHolder{
+    public class NoteRecyclerView extends RecyclerView.ViewHolder{
 
         TextView noteTitle, noteDateTime, textViewLastEdit;
 
@@ -107,5 +205,3 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         }
     }
 }
-
-

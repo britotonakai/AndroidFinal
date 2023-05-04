@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class AdapterTask extends RecyclerView.Adapter<AdapterTask.ViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<Task> taskList;
     private ChecklistActivity activity;
 
-    public AdapterTask (ChecklistActivity activity){
+    public TaskAdapter(ChecklistActivity activity){
         this.activity = activity;
     }
 

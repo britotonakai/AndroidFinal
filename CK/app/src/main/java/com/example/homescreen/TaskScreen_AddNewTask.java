@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class AddNewTask extends BottomSheetDialogFragment {
+public class TaskScreen_AddNewTask extends BottomSheetDialogFragment {
 
     public static final String TAG = "ActionBottomDialog";
 
@@ -25,8 +25,8 @@ public class AddNewTask extends BottomSheetDialogFragment {
     private Button btnSaveTask;
 
 
-    public static AddNewTask newInstance(){
-        return new AddNewTask();
+    public static TaskScreen_AddNewTask newInstance(){
+        return new TaskScreen_AddNewTask();
     }
 
     @Override

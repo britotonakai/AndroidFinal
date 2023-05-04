@@ -17,7 +17,6 @@ import java.util.List;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecyclerView> {
     Context context;
-    NoteAdapter.OnPopupMenuItemClickListener mListener;
     List<Folder> listFolder = new ArrayList<>();
 
     AllFolderScreen allFolderScreen = new AllFolderScreen();
@@ -25,11 +24,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecy
 
     public FolderAdapter(Context context){
         this.context = context;
-    }
-
-    public FolderAdapter(NoteAdapter.OnPopupMenuItemClickListener listener, List<Folder> folderItem){
-        this.mListener = listener;
-        this.listFolder = folderItem;
     }
 
     public void setFolderData(List<Folder> listFolder){

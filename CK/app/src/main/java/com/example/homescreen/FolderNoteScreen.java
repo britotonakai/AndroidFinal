@@ -93,30 +93,6 @@ public class FolderNoteScreen extends Fragment {
                 btnBold.setOnClickListener(view11 -> {
                     hasBold = !hasBold;
                     applyTextChange();
-//                            int selectionStart = editTextNoteContent.getSelectionStart();
-//                            String text = editTextNoteContent.getText().toString();
-//                            int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
-//                            int lineEnd = text.indexOf("\n", selectionStart);
-//                            if (lineEnd == -1) {
-//                                lineEnd = text.length();
-//                            }
-//
-//                            String currentLine = text.substring(lineStart, lineEnd);
-//                            SpannableString line = new SpannableString(currentLine);
-//
-//                            if(!hasBold){
-//                                line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                                hasBold = !hasBold;
-//                            }
-//                            else{
-//                                line.removeSpan(boldSpan);
-//                                line.removeSpan(italicSpan);
-//                                hasBold = false;
-//                            }
-//                            SpannableStringBuilder builder = new SpannableStringBuilder(text);
-//                            builder.replace(lineStart, lineEnd, line);
-//                            editTextNoteContent.setText(builder);
-//                            editTextNoteContent.setSelection(lineEnd);
                 });
                 btnItalic.setOnClickListener(view112 -> {
                     hasItalic = !hasItalic;
@@ -258,18 +234,12 @@ public class FolderNoteScreen extends Fragment {
             Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
             noteList.add(note);
             databaseReference.child(String.valueOf(key)).setValue(note)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
+                    .addOnSuccessListener(aVoid -> {
 
-                        }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Xử lý khi lưu trữ thất bại
-                            Log.d(TAG, "Data could not be saved: " + e.getMessage());
-                        }
+                    .addOnFailureListener(e -> {
+                        // Xử lý khi lưu trữ thất bại
+                        Log.d(TAG, "Data could not be saved: " + e.getMessage());
                     });
             Intent backIntent = new Intent(getActivity(), AllFolderScreen.class);
             startActivity(backIntent);
