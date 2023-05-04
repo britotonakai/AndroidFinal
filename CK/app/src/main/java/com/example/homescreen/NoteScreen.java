@@ -121,30 +121,6 @@ public class NoteScreen extends Fragment {
                         public void onClick(View view) {
                             hasBold = !hasBold;
                             applyTextChange();
-//                            int selectionStart = editTextNoteContent.getSelectionStart();
-//                            String text = editTextNoteContent.getText().toString();
-//                            int lineStart = text.lastIndexOf("\n", selectionStart - 1) + 1;
-//                            int lineEnd = text.indexOf("\n", selectionStart);
-//                            if (lineEnd == -1) {
-//                                lineEnd = text.length();
-//                            }
-//
-//                            String currentLine = text.substring(lineStart, lineEnd);
-//                            SpannableString line = new SpannableString(currentLine);
-//
-//                            if(!hasBold){
-//                                line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                                hasBold = !hasBold;
-//                            }
-//                            else{
-//                                line.removeSpan(boldSpan);
-//                                line.removeSpan(italicSpan);
-//                                hasBold = false;
-//                            }
-//                            SpannableStringBuilder builder = new SpannableStringBuilder(text);
-//                            builder.replace(lineStart, lineEnd, line);
-//                            editTextNoteContent.setText(builder);
-//                            editTextNoteContent.setSelection(lineEnd);
                         }
                     });
                     btnItalic.setOnClickListener(new View.OnClickListener() {

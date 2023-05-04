@@ -51,7 +51,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecy
             public void onClick(View view) {
                 Fragment current = FragmentManager.findFragment(view);
                 FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.allFolderScreen, new AllNoteScreen_FolderScreen());
+                transaction.replace(R.id.allFolderScreen, new AllFolderScreen_AllNote());
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

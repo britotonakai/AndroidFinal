@@ -5,11 +5,12 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -22,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -31,15 +31,18 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class FolderNoteScreen extends Fragment {
+public class AllFolderScreen_NewNote extends Fragment {
     Button btnSave;
     ImageButton btnPen, btnTable, btnImage, btnBulletList, btnText, btnCheckList, btnShare,
             btnBold, btnItalic, btnUnderline, btnAlignRight, btnAlignLeft;
@@ -48,6 +51,7 @@ public class FolderNoteScreen extends Fragment {
     EditText editTextNoteTitle, editTextNoteContent;
     TextView textViewCurrentDay;
     List<Note> noteList;
+    List<String> folders = new ArrayList<>();
     BottomSheetBehavior bottomSheetBehavior;
     boolean hasBullet = false, hasBold = false, hasItalic =false, hasUnderline = false,
             hasTitle = false, hasHeading = false, hasSubheading = false, hasBody = false;
@@ -230,19 +234,19 @@ public class FolderNoteScreen extends Fragment {
 
         btnSave.setOnClickListener(view13 -> {
             String key = databaseReference.push().getKey();
+            DatabaseReference noteDatabase = databaseReference.child("Note");
             noteList = new ArrayList<>();
-            Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
-            noteList.add(note);
-            databaseReference.child(String.valueOf(key)).setValue(note)
-                    .addOnSuccessListener(aVoid -> {
+//            Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
+//            noteList.add(note);
+//            noteDatabase.child(key).setValue(note);
 
-                    })
-                    .addOnFailureListener(e -> {
-                        // Xử lý khi lưu trữ thất bại
-                        Log.d(TAG, "Data could not be saved: " + e.getMessage());
-                    });
-            Intent backIntent = new Intent(getActivity(), AllFolderScreen.class);
-            startActivity(backIntent);
+
+            Fragment current = FragmentManager.findFragment(view13);
+            FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
+            AllFolderScreen_AllNote allNote = new AllFolderScreen_AllNote();
+            transaction.replace(R.id.newNoteLayout, allNote);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
         //bullet method

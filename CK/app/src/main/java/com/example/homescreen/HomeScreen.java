@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,7 +36,7 @@ public class HomeScreen extends Fragment {
     RecyclerView noteList;
     NoteAdapter noteAdapter;
     SearchView searchView;
-    TextView textViewRecently, textViewPinned;
+    TextView textViewRecently, textViewPinned, textViewDay;
     int someVariable;
     List<Note> list = new ArrayList<>();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -48,8 +49,14 @@ public class HomeScreen extends Fragment {
         noteList = view.findViewById(R.id.noteList);
         noteAdapter = new NoteAdapter(getActivity());
         searchView = view.findViewById(R.id.searchView);
+        textViewDay = view.findViewById(R.id.textViewHomeDay);
         textViewRecently = view.findViewById(R.id.textViewRecently);
         textViewPinned = view.findViewById(R.id.textViewPinned);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+        String dateTime = day_month_year_time.format(calendar.getTime());
+        textViewDay.setText(dateTime);
+
         textViewRecently.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,11 +69,15 @@ public class HomeScreen extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
                       for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                            String noteStatus = String.valueOf(snapshot1.child("noteStatus").getValue());
                             String noteID = String.valueOf(snapshot1.child("noteID").getValue());
                             String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
                             String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
                             String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
-                            list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
+                            if(!noteStatus.equals("Deleted")){
+                                list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
+                            }
+
                         }
 
                         SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
@@ -105,6 +116,31 @@ public class HomeScreen extends Fragment {
                 textViewPinned.setTypeface(textViewRecently.getTypeface(), Typeface.BOLD);
                 textViewRecently.setTextColor(Color.BLACK);
                 textViewRecently.setTypeface(null, Typeface.NORMAL);
+                DatabaseReference notePin = FirebaseDatabase.getInstance().getReference("Note");
+                notePin.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list.clear();
+                        for(DataSnapshot notePinSnapshot : snapshot.getChildren()){
+                            String notePin = String.valueOf(notePinSnapshot.child("notePin").getValue());
+                            String noteStatus = String.valueOf(notePinSnapshot.child("noteStatus").getValue());
+                            String noteID = String.valueOf(notePinSnapshot.child("noteID").getValue());
+                            String noteTitle = String.valueOf(notePinSnapshot.child("noteTitle").getValue());
+                            String noteContent = String.valueOf(notePinSnapshot.child("noteContent").getValue());
+                            String noteDateTime = String.valueOf(notePinSnapshot.child("noteDateTime").getValue());
+                            if(!noteStatus.equals("Deleted") && notePin.equals("Pinned")){
+                                list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
+                            }
+                        }
+                        noteAdapter.setNoteData(list);
+                        noteAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 

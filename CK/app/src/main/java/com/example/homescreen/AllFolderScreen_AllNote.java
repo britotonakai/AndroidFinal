@@ -22,8 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AllNoteScreen_FolderScreen extends Fragment {
+public class AllFolderScreen_AllNote extends Fragment {
     RecyclerView noteList;
     FolderAdapter folderAdapter;
     TextView folderDirectory;
@@ -108,8 +106,8 @@ public class AllNoteScreen_FolderScreen extends Fragment {
         btnNote.setOnClickListener(view14 -> {
             Fragment current = FragmentManager.findFragment(view14);
             FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();
-            NoteScreen noteScreen = new NoteScreen();
-            transaction.replace(R.id.allFolderScreen, noteScreen);
+            AllFolderScreen_NewNote newNoteFolder = new AllFolderScreen_NewNote();
+            transaction.replace(R.id.allFolderScreen, newNoteFolder);
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -134,6 +132,8 @@ public class AllNoteScreen_FolderScreen extends Fragment {
 
             }
         });
+
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         noteList.setLayoutManager(linearLayoutManager);

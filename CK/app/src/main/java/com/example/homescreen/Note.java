@@ -1,7 +1,7 @@
 package com.example.homescreen;
 
 public class Note {
-    String noteID,noteTitle, noteContent, noteDateTime;
+    String noteID,noteTitle, noteContent, noteDateTime, noteStatus, notePin, noteLock, notePassword;
 
     public Note(String noteID,String noteTitle, String noteContent,String noteDateTime){
         this.noteID = noteID;
@@ -10,6 +10,22 @@ public class Note {
         this.noteDateTime = noteDateTime;
     }
 
+    public Note(String noteID,String noteTitle, String noteContent,String noteDateTime, String noteDelete){
+        this.noteID = noteID;
+        this.noteTitle = noteTitle;
+        this.noteContent = noteContent;
+        this.noteDateTime = noteDateTime;
+        this.noteStatus = noteDelete;
+    }
+    public Note(String noteID,String noteTitle, String noteContent,String noteDateTime, String notePin, String noteLock, String notePassword){
+        this.noteID = noteID;
+        this.noteTitle = noteTitle;
+        this.noteContent = noteContent;
+        this.noteDateTime = noteDateTime;
+        this.notePin = notePin;
+        this.noteLock = noteLock;
+        this.notePassword = notePassword;
+    }
     public String getNoteID() {
         return noteID;
     }
@@ -40,6 +56,30 @@ public class Note {
 
     public void setNoteDateTime(String noteDateTime) {
         this.noteDateTime = noteDateTime;
+    }
+
+    public String getNoteStatus() {
+        return noteStatus;
+    }
+
+    public void setNoteStatus(String noteStatus) {
+        this.noteStatus = noteStatus;
+    }
+
+    public String getNotePin() {
+        return notePin;
+    }
+
+    public void setNotePin(String notePin) {
+        this.notePin = notePin;
+    }
+
+    public String getNoteLock() {
+        return noteLock;
+    }
+
+    public void setNoteLock(String noteLock) {
+        this.noteLock = noteLock;
     }
 }
 
