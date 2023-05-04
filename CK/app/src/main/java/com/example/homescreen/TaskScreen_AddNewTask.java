@@ -13,9 +13,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class TaskScreen_AddNewTask extends BottomSheetDialogFragment {
 
@@ -47,6 +53,8 @@ public class TaskScreen_AddNewTask extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         newTaskText = getView().findViewById(R.id.newTaskText);
         btnSaveTask = getView().findViewById(R.id.btnSaveTask);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Task");
 
         boolean isUpdate = false;
         final Bundle bundle = getArguments();
@@ -82,17 +90,25 @@ public class TaskScreen_AddNewTask extends BottomSheetDialogFragment {
 
             }
         });
-
+        final boolean finalIsUpdate = isUpdate;
         btnSaveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String text = newTaskText.getText().toString();
-                Task task = new Task();
-                task.setTask(text);
-                task.setStatus(0);
+                if (finalIsUpdate) {
+                    // Update existing task
+                    databaseReference.child(bundle.getString("taskId")).child("Task").setValue(text);
+                } else {
+                    // Add new task
+                    Task task = new Task();
+                    task.setTask(text);
+                    task.setStatus(0);
+                    databaseReference.push().setValue(task);
+                }
                 dismiss();
             }
         });
+
     }
 
     @Override
