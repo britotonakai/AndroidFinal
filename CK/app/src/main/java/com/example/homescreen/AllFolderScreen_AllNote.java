@@ -35,7 +35,6 @@ import java.util.List;
 
 public class AllFolderScreen_AllNote extends Fragment {
     RecyclerView noteList;
-    FolderAdapter folderAdapter;
     TextView folderDirectory;
     NoteAdapter noteAdapter;
     ImageButton btnNote, btnFolder;

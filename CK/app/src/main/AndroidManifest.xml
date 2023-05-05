@@ -18,9 +18,6 @@
             android:name=".TaskScreen_AddNewTask"
             android:label="Add New Task" />
         <activity
-            android:name=".TestDatabaseActivity"
-            android:exported="false"></activity>
-        <activity
             android:name=".NavigationScreen"
             android:exported="true">
             <intent-filter>

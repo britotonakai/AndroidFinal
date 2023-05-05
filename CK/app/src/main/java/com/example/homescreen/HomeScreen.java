@@ -37,7 +37,6 @@ public class HomeScreen extends Fragment {
     NoteAdapter noteAdapter;
     SearchView searchView;
     TextView textViewRecently, textViewPinned, textViewDay;
-    int someVariable;
     List<Note> list = new ArrayList<>();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference("Note");
