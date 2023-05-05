@@ -23,11 +23,8 @@ public class ChecklistActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private RecyclerView tasks;
-    private TaskAdapter adapter;
+    TaskAdapter adapter;
     private List<Task> taskList;
-    private static final int REQUEST_CODE_EDIT_TASK = 1;
-    private static final int MENU_ITEM_EDIT = 1;
-    private static final int MENU_ITEM_DELETE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
