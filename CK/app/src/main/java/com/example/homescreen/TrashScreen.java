@@ -38,7 +38,8 @@ public class TrashScreen extends Fragment {
         trashList = view.findViewById(R.id.TrashList);
         trashAdapter = new TrashAdapter(getContext());
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Note");databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Note");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listNote.clear();

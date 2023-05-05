@@ -75,7 +75,6 @@ public class AllFolderScreen extends Fragment {
 
             btnCreate.setOnClickListener(view2 -> {
                 String key = databaseFolder.push().getKey();
-
                 folder = new ArrayList<>();
                 Folder currentFolder = new Folder(key, editTextFolderName.getText().toString(), dateTime);
                 folder.add(currentFolder);

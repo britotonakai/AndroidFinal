@@ -236,10 +236,6 @@ public class AllFolderScreen_NewNote extends Fragment {
             String key = databaseReference.push().getKey();
             DatabaseReference noteDatabase = databaseReference.child("Note");
             noteList = new ArrayList<>();
-//            Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
-//            noteList.add(note);
-//            noteDatabase.child(key).setValue(note);
-
 
             Fragment current = FragmentManager.findFragment(view13);
             FragmentTransaction transaction = current.getParentFragmentManager().beginTransaction();

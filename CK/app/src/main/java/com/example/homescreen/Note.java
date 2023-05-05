@@ -81,5 +81,13 @@ public class Note {
     public void setNoteLock(String noteLock) {
         this.noteLock = noteLock;
     }
+
+    public String getNotePassword() {
+        return notePassword;
+    }
+
+    public void setNotePassword(String notePassword) {
+        this.notePassword = notePassword;
+    }
 }
 

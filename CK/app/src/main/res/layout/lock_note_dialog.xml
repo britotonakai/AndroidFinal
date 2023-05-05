@@ -12,6 +12,13 @@
         android:layout_margin="20dp">
 
         <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please enter password to unlock this note"
+            android:textColor="@color/black" />
+
+        <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +32,33 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <Button
+                android:id="@+id/btnLockDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#F9BFB6"
+                android:textColor="@color/black"
+                android:text="Done" />
+
+            <Button
+                android:id="@+id/btnLockCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#CCD5AE"
+                android:text="Cancel"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
