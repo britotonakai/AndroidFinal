@@ -158,14 +158,14 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:paddingStart="5dp"
-            app:srcCompat="@drawable/baseline_format_indent_increase_24" />
+            app:srcCompat="@drawable/baseline_format_indent_decrease_24" />
 
         <ImageButton
             android:id="@+id/btnEditAlignRight"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:paddingStart="5dp"
-            app:srcCompat="@drawable/baseline_format_indent_decrease_24" />
+            app:srcCompat="@drawable/baseline_format_indent_increase_24" />
 
     </LinearLayout>
 
