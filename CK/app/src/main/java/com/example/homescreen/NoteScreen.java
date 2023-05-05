@@ -39,6 +39,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,6 +90,7 @@ public class NoteScreen extends Fragment {
         btnAlignRight = view.findViewById(R.id.btnAlignRight);
         btnAlignLeft = view.findViewById(R.id.btnAlignLeft);
         btnImage = view.findViewById(R.id.btnImage);
+        btnTable = view.findViewById(R.id.btnTable);
         btnTitle = view.findViewById(R.id.btnTextTitle);
         btnHeading = view.findViewById(R.id.btnTextHeading);
         btnSubheading = view.findViewById(R.id.btnTextSubheading);
@@ -366,6 +369,15 @@ public class NoteScreen extends Fragment {
                 if(shareIntent.resolveActivity(getActivity().getPackageManager()) != null){
                     startActivity(shareIntent);
                 }
+
+            }
+        });
+
+        btnTable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TableActivity.class);
+                startActivity(intent);
 
             }
         });
