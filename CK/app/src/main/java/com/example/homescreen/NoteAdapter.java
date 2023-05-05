@@ -47,8 +47,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +83,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull NoteRecyclerView holder, int position) {
-        Note note = listNote.get(position);
+        int position1= holder.getAdapterPosition();
+        Note note = listNote.get(position1);
         if(note == null){
             return;
         }
@@ -96,6 +101,21 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                     String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
                     String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
                     String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                    Collections.sort(listNote, new Comparator<Note>() {
+                        @Override
+                        public int compare(Note note1, Note note2) {
+                            Date date1 = null;
+                            Date date2 = null;
+                            try {
+                                date1 = format.parse(note1.noteDateTime);
+                                date2 = format.parse(note2.noteDateTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return date2.compareTo(date1);
+                        }
+                    });
                     listNote.add(new Note(noteID, noteTitle, noteContent, noteDateTime, notePin, noteLock, notePassword));
                 }
             }
@@ -120,9 +140,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                     public boolean onMenuItemClick(MenuItem menuItem) {
 
                         switch(menuItem.getItemId()){
-
                             case R.id.btnEdit:
-                                int position1= holder.getAdapterPosition();
                                 if(listNote.get(position1).getNoteLock().equals("Locked")){
                                     Dialog lockDialog = new Dialog(context);
                                     LayoutInflater lock = LayoutInflater.from(context);
@@ -168,7 +186,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                                 });
 
                                                 btnEdit.setOnClickListener(view12 -> {
-                                                    DatabaseReference noteChild = databaseNote.child(note.getNoteID());
+                                                    DatabaseReference noteChild = databaseNote.child(listNote.get(position1).getNoteID());
                                                     Calendar calendar = Calendar.getInstance();
                                                     SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
                                                     String dateTime = day_month_year_time.format(calendar.getTime());

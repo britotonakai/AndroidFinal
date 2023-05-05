@@ -76,7 +76,6 @@ public class HomeScreen extends Fragment {
                             if(!noteStatus.equals("Deleted")){
                                 list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
                             }
-
                         }
 
                         SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
