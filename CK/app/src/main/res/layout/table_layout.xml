@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="20dp"
+        android:layout_weight="1"
+        android:background="#FAF2DA"
+        android:stretchColumns="2">
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                android:background="#8E9775"
+                android:paddingStart="5dp"
+                android:text="TextView" />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="0.5dp"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                android:background="#8E9775"
+                android:paddingStart="5dp"
+                android:text="TextView" />
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/editText3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
+                android:layout_marginTop="0.5dp"
+                android:layout_weight="1"
+                android:background="#8E9775"
+                android:paddingStart="5dp"
+                android:text="TextView" />
+
+            <EditText
+                android:id="@+id/editText4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0.5dp"
+                android:layout_weight="1"
+                android:background="#8E9775"
+                android:paddingStart="5dp"
+                android:text="TextView" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
