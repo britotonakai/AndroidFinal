@@ -15,6 +15,9 @@
             android:name=".ChecklistActivity"
             android:exported="false" />
         <activity
+            android:name=".TaskScreen_AddNewTask"
+            android:label="Add New Task" />
+        <activity
             android:name=".TestDatabaseActivity"
             android:exported="false"></activity>
         <activity

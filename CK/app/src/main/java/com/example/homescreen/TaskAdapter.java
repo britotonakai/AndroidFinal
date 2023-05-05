@@ -29,6 +29,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public int getItemCount(){
+        if (taskList == null) {
+            return 0;
+        }
         return taskList.size();
     }
     private boolean toBoolean(int n){

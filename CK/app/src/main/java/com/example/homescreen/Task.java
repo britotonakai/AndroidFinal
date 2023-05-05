@@ -1,10 +1,11 @@
 package com.example.homescreen;
 
 public class Task {
-    private int id, status;
+    private String id;
+    private int status;
     private String task;
 
-    public Task(int id, int status, String task) {
+    public Task(String id, int status, String task) {
         this.id = id;
         this.status = status;
         this.task = task;
@@ -13,11 +14,11 @@ public class Task {
     public Task() {
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

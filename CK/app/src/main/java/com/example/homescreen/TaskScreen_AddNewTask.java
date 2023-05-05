@@ -1,121 +1,50 @@
 package com.example.homescreen;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-public class TaskScreen_AddNewTask extends BottomSheetDialogFragment {
+public class TaskScreen_AddNewTask extends AppCompatActivity {
 
-    public static final String TAG = "ActionBottomDialog";
-
+    private DatabaseReference mDatabase;
     private EditText newTaskText;
-    private Button btnSaveTask;
-
-
-    public static TaskScreen_AddNewTask newInstance(){
-        return new TaskScreen_AddNewTask();
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.DialogStyle);
-    }
+        setContentView(R.layout.new_task);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.new_task, container, false);
-        getDialog().getWindow().setSoftInputMode((WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE));
-        return view;
-    }
+        mDatabase = FirebaseDatabase.getInstance().getReference("Task");
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-        newTaskText = getView().findViewById(R.id.newTaskText);
-        btnSaveTask = getView().findViewById(R.id.btnSaveTask);
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("Task");
-
-        boolean isUpdate = false;
-        final Bundle bundle = getArguments();
-        if(bundle != null){
-            isUpdate = true;
-            String task = bundle.getString("task");
-            newTaskText.setText(task);
-            if(task.length()>0){
-                btnSaveTask.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
-            }
-        }
-
-        newTaskText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.toString().equals("")){
-                    btnSaveTask.setEnabled(false);
-                    btnSaveTask.setTextColor(Color.GRAY);
-                }
-                else {
-                    btnSaveTask.setEnabled(false);
-                    btnSaveTask.setTextColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        final boolean finalIsUpdate = isUpdate;
+        newTaskText = findViewById(R.id.newTaskText);
+        Button btnSaveTask = findViewById(R.id.btnSaveTask);
         btnSaveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String text = newTaskText.getText().toString();
-                if (finalIsUpdate) {
-                    // Update existing task
-                    databaseReference.child(bundle.getString("taskId")).child("Task").setValue(text);
-                } else {
-                    // Add new task
-                    Task task = new Task();
-                    task.setTask(text);
-                    task.setStatus(0);
-                    databaseReference.push().setValue(task);
-                }
-                dismiss();
+                saveTask();
             }
         });
-
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog){
-        Activity activity = getActivity();
-        if(activity instanceof DialogCloseListener){
-            ((DialogCloseListener)activity).handleDialogClose(dialog);
+    private void saveTask() {
+        String task = newTaskText.getText().toString().trim();
+
+        if (TextUtils.isEmpty(task)) {
+            Toast.makeText(this, "Please enter a task", Toast.LENGTH_LONG).show();
+        } else {
+            String taskId = mDatabase.push().getKey();
+            Task newTask = new Task(taskId, 0, task);
+            mDatabase.child(taskId).setValue(newTask);
+
+            Toast.makeText(this, "Task added successfully", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 }

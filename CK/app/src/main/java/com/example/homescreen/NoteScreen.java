@@ -92,6 +92,7 @@ public class NoteScreen extends Fragment {
         btnHeading = view.findViewById(R.id.btnTextHeading);
         btnSubheading = view.findViewById(R.id.btnTextSubheading);
         btnBody = view.findViewById(R.id.btnTextBody);
+        btnCheckList = view.findViewById(R.id.btnCheckList);
         textBottomSheet = view.findViewById(R.id.text_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(textBottomSheet);
         editTextNoteTitle = view.findViewById(R.id.editTextNoteTitle);
@@ -342,6 +343,14 @@ public class NoteScreen extends Fragment {
                 }else{
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
+            }
+        });
+
+        btnCheckList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ChecklistActivity.class);
+                startActivity(intent);
             }
         });
 
