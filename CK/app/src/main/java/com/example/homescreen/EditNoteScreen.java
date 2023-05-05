@@ -26,23 +26,23 @@ import java.util.List;
 
 public class EditNoteScreen extends Fragment {
 
-    Button btnSave;
     ImageButton btnPen, btnTable, btnImage, btnBulletList, btnText, btnCheckList, btnShare;
     EditText editTextNoteTitle, editTextNoteContent;
     TextView textViewCurrentDay;
     NavigationScreen mainScreen;
-    String noteTitle = "", noteContent = "";
-    List<Note> noteList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_note, container, false);
-//        btnSave = view.findViewById(R.id.btnEditSave);
         btnShare = view.findViewById(R.id.btnEditShare);
         editTextNoteTitle = view.findViewById(R.id.editTitle);
         editTextNoteContent = view.findViewById(R.id.editContent);
         textViewCurrentDay = view.findViewById(R.id.textViewEditCurrentDay);
+        btnBulletList = view.findViewById(R.id.btnEditBulletList);
+        btnText = view.findViewById(R.id.btnEditText);
+        btnCheckList = view.findViewById(R.id.btnEditCheckList);
+        btnImage = view.findViewById(R.id.btnEditImage);
 
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
