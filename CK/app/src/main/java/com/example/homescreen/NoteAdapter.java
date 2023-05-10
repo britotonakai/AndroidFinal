@@ -156,53 +156,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                             String passwordUser = listNote.get(position1).getNotePassword();
                                             if(password.equals(passwordUser)){
                                                 lockDialog.dismiss();
-                                                Dialog editDialog = new Dialog(context);
-                                                LayoutInflater edit = LayoutInflater.from(context);
-                                                View editView = edit.inflate(R.layout.edit_note, null);
-                                                editDialog.setContentView(editView);
-                                                editDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                                EditText noteTitle = editView.findViewById(R.id.editTitle);
-                                                EditText noteContent = editView.findViewById(R.id.editContent);
-                                                TextView noteCurrentDay = editView.findViewById(R.id.textViewEditCurrentDay);
-                                                Button btnEdit = editView.findViewById(R.id.btnConfirmEdit);
-                                                Button btnCancel = editView.findViewById(R.id.btnCancel);
-                                                ImageButton btnShare = editView.findViewById(R.id.btnEditShare);
-
-                                                noteCurrentDay.setText(note.getNoteDateTime());
-                                                noteTitle.setText(note.getNoteTitle());
-                                                noteContent.setText(note.getNoteContent());
-
-                                                btnShare.setOnClickListener(view1 -> {
-                                                    Intent shareIntent = new Intent();
-                                                    shareIntent.setAction(Intent.ACTION_SEND);
-                                                    shareIntent.putExtra(Intent.EXTRA_TEXT, noteTitle.getText().toString());
-                                                    shareIntent.putExtra(Intent.EXTRA_TEXT, noteContent.getText().toString());
-                                                    shareIntent.setType("text/plain");
-
-                                                    if(shareIntent.resolveActivity(context.getPackageManager()) != null){
-                                                        context.startActivity(shareIntent);
-                                                    }
-
-                                                });
-
-                                                btnEdit.setOnClickListener(view12 -> {
-                                                    DatabaseReference noteChild = databaseNote.child(listNote.get(position1).getNoteID());
-                                                    Calendar calendar = Calendar.getInstance();
-                                                    SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
-                                                    String dateTime = day_month_year_time.format(calendar.getTime());
-                                                    noteCurrentDay.setText(dateTime);
-
-                                                    Map<String, Object> updateNote = new HashMap<>();
-                                                    updateNote.put("noteTitle", noteTitle.getText().toString());
-                                                    updateNote.put("noteContent", noteContent.getText().toString());
-                                                    updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
-                                                    noteChild.updateChildren(updateNote);
-                                                    editDialog.dismiss();
-                                                    notifyDataSetChanged();
-                                                });
-
-                                                btnCancel.setOnClickListener(view13 -> editDialog.dismiss());
-                                                editDialog.show();
+                                                int EditPosition = holder.getAdapterPosition();
+                                                showEditDialog(EditPosition);
                                             }else{
                                                 Toast.makeText(context, "Wrong Password, please enter again", Toast.LENGTH_SHORT).show();
                                             }
@@ -220,57 +175,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                 else{
                                     int EditPosition = holder.getAdapterPosition();
                                     showEditDialog(EditPosition);
-//                                    Dialog editDialog = new Dialog(context);
-//                                    LayoutInflater edit = LayoutInflater.from(context);
-//                                    View editView = edit.inflate(R.layout.edit_note, null);
-//                                    editDialog.setContentView(editView);
-//                                    editDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                                    EditText noteTitle = editView.findViewById(R.id.editTitle);
-//                                    EditText noteContent = editView.findViewById(R.id.editContent);
-//                                    TextView noteCurrentDay = editView.findViewById(R.id.textViewEditCurrentDay);
-//                                    Button btnEdit = editView.findViewById(R.id.btnConfirmEdit);
-//                                    Button btnCancel = editView.findViewById(R.id.btnCancel);
-//                                    ImageButton btnBold = editView.findViewById(R.id.btnEditBold);
-//                                    ImageButton btnItalic = editView.findViewById(R.id.btnEditItalic);
-//                                    ImageButton btnUnderline = editView.findViewById(R.id.btnEditUnderline);
-//                                    ImageButton btnShare = editView.findViewById(R.id.btnEditShare);
-//
-//                                    noteCurrentDay.setText(note.getNoteDateTime());
-//                                    noteTitle.setText(note.getNoteTitle());
-//                                    noteContent.setText(note.getNoteContent());
-//
-//
-//                                    btnShare.setOnClickListener(view1 -> {
-//                                        Intent shareIntent = new Intent();
-//                                        shareIntent.setAction(Intent.ACTION_SEND);
-//                                        shareIntent.putExtra(Intent.EXTRA_TEXT, noteTitle.getText().toString());
-//                                        shareIntent.putExtra(Intent.EXTRA_TEXT, noteContent.getText().toString());
-//                                        shareIntent.setType("text/plain");
-//
-//                                        if(shareIntent.resolveActivity(context.getPackageManager()) != null){
-//                                            context.startActivity(shareIntent);
-//                                        }
-//
-//                                    });
-//
-//                                    btnEdit.setOnClickListener(view12 -> {
-//                                        DatabaseReference noteChild = databaseNote.child(note.getNoteID());
-//                                        Calendar calendar = Calendar.getInstance();
-//                                        SimpleDateFormat day_month_year_time = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
-//                                        String dateTime = day_month_year_time.format(calendar.getTime());
-//                                        noteCurrentDay.setText(dateTime);
-//
-//                                        Map<String, Object> updateNote = new HashMap<>();
-//                                        updateNote.put("noteTitle", noteTitle.getText().toString());
-//                                        updateNote.put("noteContent", noteContent.getText().toString());
-//                                        updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
-//                                        noteChild.updateChildren(updateNote);
-//                                        editDialog.dismiss();
-//                                        notifyDataSetChanged();
-//                                    });
-//
-//                                    btnCancel.setOnClickListener(view13 -> editDialog.dismiss());
-//                                    editDialog.show();
                                 }
                                 return true;
                             case R.id.btnDelete:
@@ -533,7 +437,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         ImageButton btnAlignRight = editView.findViewById(R.id.btnEditAlignRight);
         ImageButton btnBulletList = editView.findViewById(R.id.btnEditBulletList);
         ImageButton btnImage = editView.findViewById(R.id.btnEditImage);
-
+        ImageButton btnCheckList = editView.findViewById(R.id.btnEditCheckList);
 
 
         TextView btnTitle = editView.findViewById(R.id.btnEditTitle);
@@ -798,6 +702,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
             }
         });
 
+        btnCheckList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ChecklistActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
 
         //bullet, numbering lines, increase-decrease indent
         noteContent.setOnKeyListener(new View.OnKeyListener() {
