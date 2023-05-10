@@ -70,12 +70,13 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashRecycle
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot noteSnapshot: snapshot.getChildren()) {
                                     noteSnapshot.getRef().removeValue();
+
                                 }
-                                listNote.remove(notePosition);
-                                notifyDataSetChanged();
+                                if (notePosition >= 0 && notePosition < listNote.size()) {
+                                    listNote.remove(notePosition);
+                                    notifyDataSetChanged();
+                                }
                             }
-
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 

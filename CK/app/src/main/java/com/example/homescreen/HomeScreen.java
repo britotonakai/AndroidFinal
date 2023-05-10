@@ -3,6 +3,7 @@ package com.example.homescreen;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,14 +94,13 @@ public class HomeScreen extends Fragment {
                                 return date2.compareTo(date1);
                             }
                         });
-
                         noteAdapter.setNoteData(list);
                         noteAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Log.d("Database", " " + error);
                     }
                 });
             }

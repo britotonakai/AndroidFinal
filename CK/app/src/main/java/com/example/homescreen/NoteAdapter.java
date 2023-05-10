@@ -65,6 +65,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
     private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int REQUEST_CODE_PICK_IMAGE = 100;
     private static final int REQUEST_CODE_PERMISSIONS = 123;
+    DatabaseReference databaseNote = FirebaseDatabase.getInstance().getReference("Note");
+
     public NoteAdapter(Context context){
         this.context = context;
     }
@@ -88,19 +90,23 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         if(note == null){
             return;
         }
-        DatabaseReference databaseNote = FirebaseDatabase.getInstance().getReference("Note");
         databaseNote.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listNote.clear();
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     String noteLock = String.valueOf(snapshot1.child("noteLock").getValue());
+                    String noteStatus = String.valueOf(snapshot1.child("noteStatus").getValue());
                     String notePassword = String.valueOf(snapshot1.child("notePassword").getValue());
                     String notePin = String.valueOf(snapshot1.child("notePin").getValue());
                     String noteID = String.valueOf(snapshot1.child("noteID").getValue());
                     String noteTitle = String.valueOf(snapshot1.child("noteTitle").getValue());
                     String noteContent = String.valueOf(snapshot1.child("noteContent").getValue());
                     String noteDateTime = String.valueOf(snapshot1.child("noteDateTime").getValue());
+                    if(!noteStatus.equals("Deleted")){
+                        listNote.add(new Note(noteID, noteTitle, noteContent, noteDateTime, notePin, noteLock, notePassword));
+                    }
+
                     SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
                     Collections.sort(listNote, new Comparator<Note>() {
                         @Override
@@ -116,7 +122,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                             return date2.compareTo(date1);
                         }
                     });
-                    listNote.add(new Note(noteID, noteTitle, noteContent, noteDateTime, notePin, noteLock, notePassword));
                 }
             }
 
@@ -124,6 +129,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
 
         holder.noteTitle.setText(note.getNoteTitle());
@@ -138,7 +144,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-
                         switch(menuItem.getItemId()){
                             case R.id.btnEdit:
                                 if(listNote.get(position1).getNoteLock().equals("Locked")){
@@ -169,18 +174,46 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                             lockDialog.dismiss();
                                         }
                                     });
-
                                     lockDialog.show();
                                 }
                                 else{
-                                    int EditPosition = holder.getAdapterPosition();
-                                    showEditDialog(EditPosition);
+                                    databaseNote.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String noteTemp = " ";
+                                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                                String noteID = String.valueOf(snapshot1.child("noteID").getValue());
+                                                SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                                                Collections.sort(listNote, new Comparator<Note>() {
+                                                    @Override
+                                                    public int compare(Note note1, Note note2) {
+                                                        Date date1 = null;
+                                                        Date date2 = null;
+                                                        try {
+                                                            date1 = format.parse(note1.noteDateTime);
+                                                            date2 = format.parse(note2.noteDateTime);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        return date2.compareTo(date1);
+                                                    }
+                                                });
+                                                noteTemp = noteID;
+                                            }
+                                            if(listNote.get(position1).getNoteID().equals(noteTemp)){
+                                                showEditDialog(position1);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
                                 }
                                 return true;
                             case R.id.btnDelete:
-                                int positionLockDelete= holder.getAdapterPosition();
-                                Log.d("d", listNote.get(positionLockDelete).getNoteLock());
-                                if(listNote.get(positionLockDelete).getNoteLock().equals("Locked")){
+                                if(listNote.get(position1).getNoteLock().equals("Locked")){
                                     Dialog lockDialog = new Dialog(context);
                                     LayoutInflater lock = LayoutInflater.from(context);
                                     View lockView = lock.inflate(R.layout.lock_note_dialog, null);
@@ -204,30 +237,58 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                                     new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
-//                                                            final int position = holder.getAdapterPosition();
-                                                            if(positionLockDelete != RecyclerView.NO_POSITION){
-                                                                Map<String, Object> deleteNote = new HashMap<>();
-                                                                deleteNote.put("noteStatus", "Deleted");
-                                                                String noteID = listNote.get(positionLockDelete).getNoteID();
-                                                                DatabaseReference databaseReference = databaseNote.child(noteID);
-                                                                databaseReference.updateChildren(deleteNote)
-                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            databaseNote.addValueEventListener(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    String noteTemp = " ";
+                                                                    for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                                                        String noteID = String.valueOf(snapshot1.child("noteID").getValue());
+                                                                        SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                                                                        Collections.sort(listNote, new Comparator<Note>() {
                                                                             @Override
-                                                                            public void onSuccess(Void unused) {
-                                                                                String noteIDTemp = noteID;
-                                                                                for(int i =0; i<listNote.size(); i++){
-                                                                                    if(listNote.get(i).getNoteID().equals(noteIDTemp)){
-                                                                                        holder.itemView.setVisibility(View.GONE);
-                                                                                        listNote.remove(positionLockDelete);
-                                                                                        notifyDataSetChanged();
-                                                                                    }
+                                                                            public int compare(Note note1, Note note2) {
+                                                                                Date date1 = null;
+                                                                                Date date2 = null;
+                                                                                try {
+                                                                                    date1 = format.parse(note1.noteDateTime);
+                                                                                    date2 = format.parse(note2.noteDateTime);
+                                                                                } catch (ParseException e) {
+                                                                                    e.printStackTrace();
                                                                                 }
+                                                                                return date2.compareTo(date1);
                                                                             }
                                                                         });
-                                                            }
+                                                                        noteTemp = noteID;
+                                                                    }
+                                                                    if(listNote.get(position1).getNoteID().equals(noteTemp)){
+                                                                        if(position1 != RecyclerView.NO_POSITION){
+                                                                            Map<String, Object> deleteNote = new HashMap<>();
+                                                                            deleteNote.put("noteStatus", "Deleted");
+                                                                            DatabaseReference databaseDelete = databaseNote.child(noteTemp);
+                                                                            String finalNoteTemp = noteTemp;
+                                                                            databaseDelete.updateChildren(deleteNote)
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void unused) {
+                                                                                            if(listNote.get(position1).getNoteID().equals(finalNoteTemp)){
+                                                                                                Log.d("Success", finalNoteTemp);
+                                                                                                Log.d("Success1", listNote.get(position1).getNoteID());
+                                                                                                holder.itemView.setVisibility(View.GONE);
+                                                                                                listNote.remove(finalNoteTemp);
+                                                                                                notifyDataSetChanged();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
                                                         }
-
-
                                                     });
                                             builder.setNegativeButton("Cancel",
                                                     new DialogInterface.OnClickListener() {
@@ -249,27 +310,57 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                             new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    final int position = holder.getAdapterPosition();
-                                                    if(position != RecyclerView.NO_POSITION){
-                                                        Map<String, Object> deleteNote = new HashMap<>();
-                                                        deleteNote.put("noteStatus", "Deleted");
-                                                        String noteID = listNote.get(position).getNoteID();
-                                                        DatabaseReference databaseReference = databaseNote.child(noteID);
-                                                        databaseReference.updateChildren(deleteNote)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    databaseNote.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            String noteTemp = " ";
+                                                            for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                                                                String noteID = String.valueOf(snapshot1.child("noteID").getValue());
+                                                                SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                                                                Collections.sort(listNote, new Comparator<Note>() {
                                                                     @Override
-                                                                    public void onSuccess(Void unused) {
-                                                                        String noteIDTemp = noteID;
-                                                                        for(int i =0; i<listNote.size(); i++){
-                                                                            if(listNote.get(i).getNoteID().equals(noteIDTemp)){
-                                                                                holder.itemView.setVisibility(View.GONE);
-                                                                                listNote.remove(position);
-                                                                                notifyDataSetChanged();
-                                                                            }
+                                                                    public int compare(Note note1, Note note2) {
+                                                                        Date date1 = null;
+                                                                        Date date2 = null;
+                                                                        try {
+                                                                            date1 = format.parse(note1.noteDateTime);
+                                                                            date2 = format.parse(note2.noteDateTime);
+                                                                        } catch (ParseException e) {
+                                                                            e.printStackTrace();
                                                                         }
+                                                                        return date2.compareTo(date1);
                                                                     }
                                                                 });
-                                                    }
+                                                                noteTemp = noteID;
+                                                            }
+                                                            if(listNote.get(position1).getNoteID().equals(noteTemp)){
+                                                                if(position1 != RecyclerView.NO_POSITION){
+                                                                    String finalNoteTemp = noteTemp;
+                                                                    Map<String, Object> deleteNote = new HashMap<>();
+                                                                    deleteNote.put("noteStatus", "Deleted");
+                                                                    DatabaseReference databaseDelete1 = databaseNote.child(noteTemp);
+                                                                    databaseDelete1.updateChildren(deleteNote)
+                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void unused) {
+                                                                                    if(listNote.get(position1).getNoteID().equals(finalNoteTemp)){
+                                                                                        Log.d("Success", finalNoteTemp);
+                                                                                        Log.d("Success1", listNote.get(position1).getNoteID());
+                                                                                        holder.itemView.setVisibility(View.GONE);
+                                                                                        listNote.remove(finalNoteTemp);
+                                                                                        notifyDataSetChanged();
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
                                                 }
                                             });
                                     builder.setNegativeButton("Cancel",
@@ -282,108 +373,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                     AlertDialog dialog = builder.create();
                                     dialog.show();
                                 }
-
-                                break;
+                                return true;
                             case R.id.btnPin:
-                                int position = holder.getAdapterPosition();
-                                if(position != RecyclerView.NO_POSITION){
-                                    Map<String, Object> pinnedNote = new HashMap<>();
-                                    pinnedNote.put("notePin", "Pinned");
-                                    String noteID = listNote.get(position).getNoteID();
-                                    DatabaseReference databaseReference = databaseNote.child(noteID);
-                                    databaseReference.updateChildren(pinnedNote)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-
-                                                }
-                                            });
-                                }
+                                pinNote(position1);
                                 return true;
                             case R.id.btnLock:
-                                int btnLockPosition = holder.getAdapterPosition();
-                                if(btnLockPosition != RecyclerView.NO_POSITION){
-                                        if(listNote.get(btnLockPosition).getNoteLock().equals(null) || listNote.get(btnLockPosition).getNoteLock().equals("Unlocked")){
-                                            Dialog btnLockDialog = new Dialog(context);
-                                            LayoutInflater lock = LayoutInflater.from(context);
-                                            View btnLockView = lock.inflate(R.layout.lock_note_dialog, null);
-                                            btnLockDialog.setContentView(btnLockView);
-                                            TextView title = btnLockView.findViewById(R.id.textViewTitle);
-                                            Button btnDone = btnLockView.findViewById(R.id.btnLockDone);
-                                            Button btnCancel = btnLockView.findViewById(R.id.btnLockCancel);
-                                            title.setText("Please enter password to lock this note");
-                                            EditText editTextPassword = btnLockView.findViewById(R.id.editTextNotePassword);
-
-                                            btnDone.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    Map<String, Object> lockNote = new HashMap<>();
-                                                    lockNote.put("noteLock", "Locked");
-                                                    lockNote.put("notePassword", editTextPassword.getText().toString());
-                                                    String noteID = listNote.get(btnLockPosition).getNoteID();
-                                                    DatabaseReference databaseReference = databaseNote.child(noteID);
-                                                    databaseReference.updateChildren(lockNote)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void unused) {
-
-                                                                }
-                                                            });
-                                                    btnLockDialog.dismiss();
-                                                }
-                                            });
-                                            btnCancel.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    btnLockDialog.dismiss();
-                                                }
-                                            });
-                                            btnLockDialog.show();
-                                        }
-                                        else {
-                                            Dialog btnLockDialog = new Dialog(context);
-                                            LayoutInflater lock = LayoutInflater.from(context);
-                                            View btnLockView = lock.inflate(R.layout.lock_note_dialog, null);
-                                            btnLockDialog.setContentView(btnLockView);
-                                            Button btnDone = btnLockView.findViewById(R.id.btnLockDone);
-                                            Button btnCancel = btnLockView.findViewById(R.id.btnLockCancel);
-                                            String passwordUser = listNote.get(btnLockPosition).getNotePassword();
-                                            btnDone.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    EditText editTextPassword = btnLockView.findViewById(R.id.editTextNotePassword);
-                                                    String password = editTextPassword.getText().toString();
-                                                    if(password.equals(passwordUser)){
-                                                        Map<String, Object> unlockNote = new HashMap<>();
-                                                        unlockNote.put("noteLock", "Unlocked");
-                                                        unlockNote.remove("notePassword");
-                                                        String noteID = listNote.get(btnLockPosition).getNoteID();
-                                                        DatabaseReference databaseReference = databaseNote.child(noteID);
-                                                        databaseReference.updateChildren(unlockNote)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void unused) {
-
-                                                                    }
-                                                                });
-                                                    }
-                                                    btnLockDialog.dismiss();
-                                                }
-                                            });
-                                            btnCancel.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    btnLockDialog.dismiss();
-                                                }
-                                            });
-                                            btnLockDialog.show();
-                                        }
-                                }
+                                lockNote(position1);
                                 return true;
-                            default:
-                                return false;
                         }
-                        return true;
+                        return false;
                     }
                 });
             }
@@ -399,7 +397,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         }
         return 0;
     }
-
 
     public class NoteRecyclerView extends RecyclerView.ViewHolder{
 
@@ -806,12 +803,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
             updateNote.put("noteDateTime", noteCurrentDay.getText().toString());
             noteChild.updateChildren(updateNote);
             editDialog.dismiss();
-            notifyDataSetChanged();
         });
 
         btnCancel.setOnClickListener(view13 -> editDialog.dismiss());
         editDialog.show();
-
     }
     private void applyTextChange(EditText noteContent){
         int selectionStart = noteContent.getSelectionStart();
@@ -855,4 +850,167 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         noteContent.setSelection(lineEnd);
     }
 
+    private void pinNote(int position){
+        if(position != RecyclerView.NO_POSITION){
+            databaseNote.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String noteTemp = "";
+                    for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                        String noteID = String.valueOf(snapshot1.child("noteID").getValue());
+                        SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                        Collections.sort(listNote, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note note1, Note note2) {
+                                Date date1 = null;
+                                Date date2 = null;
+                                try {
+                                    date1 = format.parse(note1.noteDateTime);
+                                    date2 = format.parse(note2.noteDateTime);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                return date2.compareTo(date1);
+                            }
+                        });
+                        noteTemp = noteID;
+                    }
+                    String finalNoteTemp = noteTemp;
+                    if(listNote.get(position).getNoteID().equals(finalNoteTemp)){
+                        if(listNote.get(position).getNotePin().equals("Pinned")){
+                            Toast.makeText(context, "This note has been Pinned", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Map<String, Object> pinnedNote = new HashMap<>();
+                            pinnedNote.put("notePin", "Pinned");
+                            DatabaseReference databaseReference = databaseNote.child(finalNoteTemp);
+                            databaseReference.updateChildren(pinnedNote)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                        }
+                                    });
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    private void lockNote(int position){
+        if(position != RecyclerView.NO_POSITION){
+            databaseNote.addValueEventListener(new ValueEventListener() {
+                String noteTemp = "";
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                        String noteID = String.valueOf(snapshot1.child("noteID").getValue());
+                        SimpleDateFormat format = new SimpleDateFormat("HH:mm aaa, dd LLLL, yyyy");
+                        Collections.sort(listNote, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note note1, Note note2) {
+                                Date date1 = null;
+                                Date date2 = null;
+                                try {
+                                    date1 = format.parse(note1.noteDateTime);
+                                    date2 = format.parse(note2.noteDateTime);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                return date2.compareTo(date1);
+                            }
+                        });
+                        noteTemp = noteID;
+                    }
+                    String finalNoteTemp = noteTemp;
+                    if(listNote.get(position).getNoteID().equals(finalNoteTemp)){
+                        if(listNote.get(position).getNoteLock().equals("Locked")){
+                            Dialog btnLockDialog = new Dialog(context);
+                            LayoutInflater lock = LayoutInflater.from(context);
+                            View btnLockView = lock.inflate(R.layout.lock_note_dialog, null);
+                            btnLockDialog.setContentView(btnLockView);
+                            Button btnDone = btnLockView.findViewById(R.id.btnLockDone);
+                            Button btnCancel = btnLockView.findViewById(R.id.btnLockCancel);
+                            String passwordUser = listNote.get(position).getNotePassword();
+                            btnDone.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    EditText editTextPassword = btnLockView.findViewById(R.id.editTextNotePassword);
+                                    String password = editTextPassword.getText().toString();
+                                    if(password.equals(passwordUser)){
+                                        if(listNote.get(position).getNoteID().equals(finalNoteTemp)){
+                                            Map<String, Object> unlockNote = new HashMap<>();
+                                            unlockNote.put("noteLock", "Unlocked");
+                                            unlockNote.remove("notePassword");
+                                            DatabaseReference databaseReference = databaseNote.child(finalNoteTemp);
+                                            databaseReference.updateChildren(unlockNote)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                    btnLockDialog.dismiss();
+                                }
+                            });
+                            btnCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    btnLockDialog.dismiss();
+                                }
+                            });
+                            btnLockDialog.show();
+                        }
+                        else{
+                            Dialog btnLockDialog = new Dialog(context);
+                            LayoutInflater lock = LayoutInflater.from(context);
+                            View btnLockView = lock.inflate(R.layout.lock_note_dialog, null);
+                            btnLockDialog.setContentView(btnLockView);
+                            TextView title = btnLockView.findViewById(R.id.textViewTitle);
+                            Button btnDone = btnLockView.findViewById(R.id.btnLockDone);
+                            Button btnCancel = btnLockView.findViewById(R.id.btnLockCancel);
+                            title.setText("Please enter password to lock this note");
+                            EditText editTextPassword = btnLockView.findViewById(R.id.editTextNotePassword);
+                            btnDone.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Map<String, Object> lockNote = new HashMap<>();
+                                    lockNote.put("noteLock", "Locked");
+                                    lockNote.put("notePassword", editTextPassword.getText().toString());
+                                    DatabaseReference databaseReference = databaseNote.child(finalNoteTemp);
+                                    databaseReference.updateChildren(lockNote)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+
+                                                }
+                                            });
+                                    btnLockDialog.dismiss();
+                                }
+                            });
+                            btnCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    btnLockDialog.dismiss();
+                                }
+                            });
+                            btnLockDialog.show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+    }
 }
