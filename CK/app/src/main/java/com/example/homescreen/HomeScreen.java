@@ -64,6 +64,9 @@ public class HomeScreen extends Fragment {
                 textViewRecently.setTypeface(textViewRecently.getTypeface(), Typeface.BOLD);
                 textViewPinned.setTextColor(Color.BLACK);
                 textViewPinned.setTypeface(null, Typeface.NORMAL);
+                searchView.setQuery("", false);
+                searchView.clearFocus();
+
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -114,6 +117,9 @@ public class HomeScreen extends Fragment {
                 textViewPinned.setTypeface(textViewRecently.getTypeface(), Typeface.BOLD);
                 textViewRecently.setTextColor(Color.BLACK);
                 textViewRecently.setTypeface(null, Typeface.NORMAL);
+                searchView.setQuery("", false);
+                searchView.clearFocus();
+
                 DatabaseReference notePin = FirebaseDatabase.getInstance().getReference("Note");
                 notePin.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -151,19 +157,19 @@ public class HomeScreen extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
+                textViewRecently.performClick();
                 DatabaseReference noteSearch = FirebaseDatabase.getInstance().getReference("Note");
                 noteSearch.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
                         for(DataSnapshot notePinSnapshot : snapshot.getChildren()){
-                            String notePin = String.valueOf(notePinSnapshot.child("notePin").getValue());
                             String noteStatus = String.valueOf(notePinSnapshot.child("noteStatus").getValue());
                             String noteID = String.valueOf(notePinSnapshot.child("noteID").getValue());
                             String noteTitle = String.valueOf(notePinSnapshot.child("noteTitle").getValue());
                             String noteContent = String.valueOf(notePinSnapshot.child("noteContent").getValue());
                             String noteDateTime = String.valueOf(notePinSnapshot.child("noteDateTime").getValue());
-                            if(!noteStatus.equals("Deleted") && !notePin.equals("Pinned") && noteTitle.toLowerCase().contains(query.toLowerCase())){
+                            if(!noteStatus.equals("Deleted") && noteTitle.toLowerCase().contains(query.toLowerCase())){
                                 list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
                             }
                         }

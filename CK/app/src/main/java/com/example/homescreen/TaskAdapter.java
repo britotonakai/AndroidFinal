@@ -17,9 +17,12 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<Task> taskList;
     private ChecklistActivity activity;
+    private DatabaseReference mdatabase;
 
     public TaskAdapter(ChecklistActivity activity){
         this.activity = activity;
+        mdatabase = FirebaseDatabase.getInstance().getReference("Task");
+
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -31,6 +34,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         Task item = taskList.get(position);
         holder.taskCheckBox.setText(item.getTask());
         holder.taskCheckBox.setChecked(toBoolean(item.getStatus()));
+
+        holder.taskCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int status = holder.taskCheckBox.isChecked() ? 1 : 0;
+                item.setStatus(status);
+                mdatabase.child(item.getId()).child("status").setValue(item.getStatus());
+            }
+        });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
