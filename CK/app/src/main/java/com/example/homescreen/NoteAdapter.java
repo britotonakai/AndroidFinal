@@ -1,5 +1,7 @@
 package com.example.homescreen;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,12 +9,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
@@ -25,12 +34,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +58,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -608,6 +621,93 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                 Intent intent = new Intent(view.getContext(), ChecklistActivity.class);
                 view.getContext().startActivity(intent);
             }
+        });
+
+        btnImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    ActivityCompat.requestPermissions((Activity) view.getContext(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+                } else {
+                    pickImageFromGallery();
+                }
+            }
+
+            private void pickImageFromGallery() {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                ((Activity) context)
+                        .startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+            }
+
+//            @Override
+//            public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//                super.onActivityResult(requestCode, resultCode, data);
+//                if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+//                    Uri imageUri = data.getData();
+//                    Bitmap bitmap = getBitmapFromUri(imageUri);
+//                    if (bitmap != null) {
+//                        // Create the image view
+//                        ImageView imageView = new ImageView(getActivity());
+//                        imageView.setImageBitmap(bitmap);
+//
+//                        // Create a new line character
+//                        String newLine = "\n";
+//
+//                        // Get the current cursor position
+//                        int cursorPosition = noteContent.getSelectionStart();
+//
+//                        // Insert the image into the Editable text at the current cursor position
+//                        Editable editable = noteContent.getEditableText();
+//                        editable.insert(cursorPosition, newLine); // Insert a new line character
+//                        ImageSpan imageSpan = new ImageSpan(getActivity(), bitmap);
+//                        SpannableString spannableString = new SpannableString(" ");
+//                        spannableString.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                        editable.insert(cursorPosition, spannableString);
+//
+//                        // Insert a new line character after the image
+//                        editable.insert(cursorPosition + 2, newLine);
+//
+//                        // Set the cursor to the new line
+//                        noteContent.setSelection(cursorPosition + 3);
+//                    }
+//                }
+//            }
+//
+//            private Bitmap getBitmapFromUri(Uri uri) {
+//                try {
+//                    ParcelFileDescriptor parcelFileDescriptor = getActivity().getContentResolver().openFileDescriptor(uri, "r");
+//                    FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+//
+//                    // Decode the bitmap with inJustDecodeBounds=true to check its original size
+//                    BitmapFactory.Options options = new BitmapFactory.Options();
+//                    options.inJustDecodeBounds = true;
+//                    BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
+//
+//                    // Calculate the new size of the bitmap
+//                    int width = options.outWidth;
+//                    int height = options.outHeight;
+//                    int newWidth = (int) (width * 0.5);
+//                    int newHeight = (int) (height * 0.5);
+//
+//                    // Create a new bitmap with the desired size
+//                    Bitmap bitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
+//
+//                    // Draw the original bitmap onto the new bitmap using a Canvas object
+//                    Canvas canvas = new Canvas(bitmap);
+//                    Rect src = new Rect(0, 0, width, height);
+//                    Rect dst = new Rect(0, 0, newWidth, newHeight);
+//                    canvas.drawBitmap(BitmapFactory.decodeFileDescriptor(fileDescriptor), src, dst, null);
+//
+//                    parcelFileDescriptor.close();
+//                    return bitmap;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
         });
 
         //bullet, numbering lines, increase-decrease indent
