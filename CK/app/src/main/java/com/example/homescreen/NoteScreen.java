@@ -387,9 +387,17 @@ public class NoteScreen extends Fragment {
             public void onClick(View view) {
                 String key = databaseReference.push().getKey();
                 noteList = new ArrayList<>();
-                Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
-                noteList.add(note);
-                databaseReference.child(String.valueOf(key)).setValue(note)
+                String noteID = key;
+                String noteTitle = editTextNoteTitle.getText().toString();
+                String noteContent = editTextNoteContent.getText().toString();
+                String noteDateTime = textViewCurrentDay.getText().toString();
+                String notePin = "";
+                String noteLock = "";
+                String notePassword = "";
+                Note note1 = new Note(noteID, noteTitle, noteContent, noteDateTime, notePin, noteLock, notePassword);
+//                Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
+                noteList.add(note1);
+                databaseReference.child(String.valueOf(key)).setValue(note1)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

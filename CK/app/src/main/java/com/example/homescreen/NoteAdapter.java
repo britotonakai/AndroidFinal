@@ -135,10 +135,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
 
         });
         String noteID = listNote.get(position1).getNoteID();
-        String noteStatus = listNote.get(position1).getNoteStatus();
-        String notePin = listNote.get(position1).getNotePin();
-        String noteLock = listNote.get(position1).getNoteLock();
-        String notePassword = listNote.get(position1).getNotePassword();
 
         holder.noteTitle.setText(note.getNoteTitle());
         holder.noteDateTime.setText(note.getNoteDateTime());
@@ -154,7 +150,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch(menuItem.getItemId()){
                             case R.id.btnEdit:
-                                if(noteLock.equals("Locked")){
+                                if(listNote.get(position1).getNoteLock().equals("Locked")){
                                     Dialog lockDialog = new Dialog(context);
                                     LayoutInflater lock = LayoutInflater.from(context);
                                     View lockView = lock.inflate(R.layout.lock_note_dialog, null);
@@ -192,7 +188,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
                                 }
                                 return true;
                             case R.id.btnDelete:
-                                if(noteLock.equals("Locked")){
+                                if(listNote.get(position1).getNoteLock().equals("Locked")){
                                     Dialog lockDialog = new Dialog(context);
                                     LayoutInflater lock = LayoutInflater.from(context);
                                     View lockView = lock.inflate(R.layout.lock_note_dialog, null);
