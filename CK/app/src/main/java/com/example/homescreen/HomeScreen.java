@@ -132,9 +132,10 @@ public class HomeScreen extends Fragment {
                             String noteTitle = String.valueOf(notePinSnapshot.child("noteTitle").getValue());
                             String noteContent = String.valueOf(notePinSnapshot.child("noteContent").getValue());
                             String noteDateTime = String.valueOf(notePinSnapshot.child("noteDateTime").getValue());
-                            if(!noteStatus.equals("Deleted") && notePin.equals("Pinned")){
+                            if(notePin.equals("Pinned") && !noteStatus.equals("Deleted")){
                                 list.add(new Note(noteID,noteTitle, noteContent, noteDateTime));
                             }
+
                         }
                         noteAdapter.setNoteData(list);
                         noteAdapter.notifyDataSetChanged();
