@@ -21,7 +21,9 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.style.ImageSpan;
+import android.text.style.MetricAffectingSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
@@ -43,6 +45,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +73,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerView>{
     Context context;
@@ -151,6 +155,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
 
         holder.noteTitle.setText(note.getNoteTitle());
         holder.noteDateTime.setText(note.getNoteDateTime());
+        holder.cardView.setCardBackgroundColor(holder.itemView.getResources().getColor(getRandomColor()));
         holder.textViewLastEdit.setText("Last edit");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,6 +311,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
 
     }
 
+    private int getRandomColor() {
+        List<Integer> colorHex = new ArrayList<>();
+        colorHex.add(R.color.light_green);
+        colorHex.add(R.color.neon_green);
+        colorHex.add(R.color.light_pink);
+
+        Random random = new Random();
+        int color = random.nextInt(colorHex.size());
+        return colorHex.get(color);
+    }
+
     @Override
     public int getItemCount() {
         if(listNote != null){
@@ -317,12 +333,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
     public class NoteRecyclerView extends RecyclerView.ViewHolder{
 
         TextView noteTitle, noteDateTime, textViewLastEdit;
+        CardView cardView;
 
         public NoteRecyclerView(@NonNull View itemView) {
             super(itemView);
             noteTitle = itemView.findViewById(R.id.noteTitle);
             noteDateTime = itemView.findViewById(R.id.noteDateTime);
             textViewLastEdit = itemView.findViewById(R.id.textViewLastEdit);
+            cardView = itemView.findViewById(R.id.CardView);
         }
     }
 
@@ -827,15 +845,20 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteRecyclerVi
         StyleSpan italicSpan = new StyleSpan(Typeface.ITALIC);
         UnderlineSpan underlineSpan = new UnderlineSpan();
 
-        if(hasBold && hasItalic){
+        if(hasUnderline && hasItalic && hasBold){
+            line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        else if(hasBold && hasItalic){
             line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasBold && hasUnderline) {
             line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasItalic && hasUnderline) {
-            line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasBold) {
             line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasItalic) {

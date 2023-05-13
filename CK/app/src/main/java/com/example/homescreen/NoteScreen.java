@@ -387,14 +387,6 @@ public class NoteScreen extends Fragment {
             public void onClick(View view) {
                 String key = databaseReference.push().getKey();
                 noteList = new ArrayList<>();
-//                String noteID = key;
-//                String noteTitle = editTextNoteTitle.getText().toString();
-//                String noteContent = editTextNoteContent.getText().toString();
-//                String noteDateTime = textViewCurrentDay.getText().toString();
-//                String notePin = "";
-//                String noteLock = "";
-//                String notePassword = "";
-//                Note note1 = new Note(noteID, noteTitle, noteContent, noteDateTime, notePin, noteLock, notePassword);
                 Note note = new Note(key,editTextNoteTitle.getText().toString(), editTextNoteContent.getText().toString(),textViewCurrentDay.getText().toString());
                 noteList.add(note);
                 databaseReference.child(String.valueOf(key)).setValue(note)
@@ -543,15 +535,19 @@ public class NoteScreen extends Fragment {
         StyleSpan italicSpan = new StyleSpan(Typeface.ITALIC);
         UnderlineSpan underlineSpan = new UnderlineSpan();
 
-        if(hasBold && hasItalic){
+        if(hasUnderline && hasItalic && hasBold){
+            line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else if(hasBold && hasItalic){
             line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasBold && hasUnderline) {
             line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasItalic && hasUnderline) {
-            line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             line.setSpan(underlineSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            line.setSpan(italicSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasBold) {
             line.setSpan(boldSpan, 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (hasItalic) {

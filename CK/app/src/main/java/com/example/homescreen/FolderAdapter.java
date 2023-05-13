@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecyclerView> {
     Context context;
@@ -46,6 +48,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecy
         }
         holder.folderName.setText(folder.getFolderName());
         holder.folderDay.setText(folder.getFolderDay());
+        holder.folderView.setCardBackgroundColor(holder.itemView.getResources().getColor(getRandomColor()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,14 +69,26 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderRecy
         return 0;
     }
 
+    private int getRandomColor() {
+        List<Integer> colorHex = new ArrayList<>();
+        colorHex.add(R.color.light_green);
+        colorHex.add(R.color.neon_green);
+        colorHex.add(R.color.light_pink);
+
+        Random random = new Random();
+        int color = random.nextInt(colorHex.size());
+        return colorHex.get(color);
+    }
 
     public class FolderRecyclerView extends RecyclerView.ViewHolder{
         TextView folderName, folderDay;
+        CardView folderView;
 
         public FolderRecyclerView(@NonNull View itemView) {
             super(itemView);
             folderName = itemView.findViewById(R.id.textFolderName);
             folderDay = itemView.findViewById(R.id.textFolderDay);
+            folderView = itemView.findViewById(R.id.FolderView);
         }
 
 

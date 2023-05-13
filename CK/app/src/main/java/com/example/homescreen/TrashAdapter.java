@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashRecyclerView> {
 
@@ -54,6 +60,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashRecycle
         holder.trashNoteTitle.setText(note.getNoteTitle());
         holder.trashNoteContent.setText(note.getNoteContent());
         holder.trashNoteDay.setText(note.getNoteDateTime());
+        holder.trashView.setCardBackgroundColor(holder.itemView.getResources().getColor(getRandomColor()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +91,22 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashRecycle
                         });
                     }
                 })
+                        .setNeutralButton("Restore", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String noteID = listNote.get(notePosition).getNoteID();
+                                Map<String, Object> deleteNote = new HashMap<>();
+                                deleteNote.put("noteStatus", "Undeleted");
+                                DatabaseReference databaseDelete1 = databaseNote.child(noteID);
+                                databaseDelete1.updateChildren(deleteNote)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override public void onSuccess(Void unused) {
+                                                listNote.remove(noteID);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                            }
+                        })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -114,6 +137,18 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashRecycle
 //        notifyDataSetChanged();
     }
 
+    private int getRandomColor() {
+        List<Integer> colorHex = new ArrayList<>();
+        colorHex.add(R.color.light_green);
+        colorHex.add(R.color.neon_green);
+        colorHex.add(R.color.light_pink);
+
+        Random random = new Random();
+        int color = random.nextInt(colorHex.size());
+        return colorHex.get(color);
+    }
+
+
     @Override
     public int getItemCount() {
         if(listNote != null){
@@ -125,12 +160,14 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.TrashRecycle
     public class TrashRecyclerView extends RecyclerView.ViewHolder{
 
         TextView trashNoteTitle, trashNoteContent, trashNoteDay;
+        CardView trashView;
 
         public TrashRecyclerView(@NonNull View itemView) {
             super(itemView);
             trashNoteTitle = itemView.findViewById(R.id.trashNoteTitle);
             trashNoteContent = itemView.findViewById(R.id.trashNoteContent);
             trashNoteDay = itemView.findViewById(R.id.trashNoteDay);
+            trashView = itemView.findViewById(R.id.TrashView);
         }
     }
 }

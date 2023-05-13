@@ -12,4 +12,8 @@
     <color name="background_color">#FFFBF0</color>
     <color name="checkbox_color">#3f5e48</color>
     <color name="colorPrimaryDark">#3700B3</color>
+    <color name="light_green">#CCD5AE</color>
+    <color name="light_pink">#F9BFB6</color>
+    <color name="neon_green">#A2CDA4</color>
+
 </resources>
